@@ -1,0 +1,98 @@
+{% extends '::mail_layout.html.twig' %}
+
+{% block css %}
+    <style type="text/css">
+        .team-name {
+            font-weight: bold;
+        }
+
+        table#summary tr td,
+        table#summary tr th {
+            text-align: center;
+            border: 1px solid #EEEEEE;
+            vertical-align: middle;
+            padding: 10px;
+        }
+
+        table#summary thead tr th {
+            background-color: #F5F5F5;
+        }
+
+        table#summary tbody table tr td {
+            border: 0;
+        }
+
+        span.details {
+            font-size: 10px;
+        }
+
+        td.available, td.total {
+            font-size: 10px;
+        }
+
+        td.very-high {
+            font-weight: bold;
+            color: rgb(156, 0, 6);
+        }
+
+        td.high {
+            color: rgb(156, 0, 6);
+        }
+
+        td.low {
+            color: rgb(0, 97, 0);
+        }
+
+        td.very-low {
+            color: rgb(0, 97, 0);
+        }
+
+    </style>
+{% endblock %}
+
+{% block banner_title %}
+    {{ "previsional.email"|trans }}, W{{ start|date('W') }} - W{{ end|date('W') }}
+{% endblock %}
+
+{% block body %}
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" id="summary">
+        <thead>
+            <tr>
+                <th valign="center">Week</th>
+
+                {% for week in period %}
+                    <th valign="center">W{{ week|date('W') }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr>
+                <td valign="center">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <td class="team-name" style="color: {{ team.color }};">
+                                {{ team }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="nb-resources">
+                                {{ team.getNbResources() }} ressource(s)
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+
+                {% for week in period %}
+                    {% set workload = workloads[team.id][week|date('W/Y')] %}
+                    {% set percentage = workload['affectedTime'] / workload['availableTime'] * 100 %}
+
+                    <td valign="center" class="{% if percentage >= 95 %}very-high{% elseif percentage >= 80 %}high{% elseif percentage >= 75 %}normal{% elseif percentage >= 50 %}low{% else %}very-low{% endif %}">
+                        {{ percentage|number_format(0, '.', ',') }} %
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

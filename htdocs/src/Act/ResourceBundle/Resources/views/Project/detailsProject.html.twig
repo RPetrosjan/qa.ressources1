@@ -1,0 +1,40 @@
+{% extends "ActResourceBundle::layout.html.twig" %}
+
+{% block body_content %}
+    <div class="container">
+        <h2>{{ project }}</h2>
+
+        <table id="details_project" class="table table-bordered table-condensed table-striped">
+            <thead>
+                <tr>
+                    <th>Total Vendu</th>
+                    <th>{{ sumSold }}</th>
+                </tr>
+                <tr>
+                    <th>Total Workload Metatask</th>
+                    <th>{{ sumMetaWorkload }}</th>
+                </tr>
+                <tr>
+                    <th>Ressource</th>
+                    <th>Workload</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resource in resources %}
+                    <tr>
+                        <td>{{ resource.resource }}</td>
+                        <td>{{ resource.workload }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total Assigner</th>
+                    <th>{{ sumAssigned }}</th>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+
+{% endblock %}

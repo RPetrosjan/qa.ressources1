@@ -1,0 +1,6 @@
+act_resource_task_delete_ajax:
+    pattern:  /delete
+    defaults: { _controller: "ActResourceBundle:Task:deleteAJAX" }
+    requirements: { _method: post }
+    options:
+        expose: true

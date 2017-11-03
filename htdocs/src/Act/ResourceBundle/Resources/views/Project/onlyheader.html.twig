@@ -1,0 +1,49 @@
+<header class="container-fluid">
+    <div style="{% if type == 'team' %}color:{{planning.team.color}};{% else %}color:{{planning.project.color}};{% endif %}" class="span4">
+        <div class="row">
+
+            <div class="planning-title col-md-3">
+                <span class="btn btn-default planning-show-btn{% if ajax %} unloaded{% endif %} glyphicon glyphicon-chevron-{% if ajax %}down {% else %}up{% endif %}">
+                </span>
+                {% if type == 'team' %}{{ planning.team }}{% else %}{{ planning.project }}{% endif %}
+            </div>
+            <div class="col-md-2">
+                <div class="cpt recap-data">
+                    <div class="title"><span>{{ "cpt"|trans }} :</span></div>
+                    <div class="value">
+                    {% set definesCPT = false %}
+                    {% for cpt in planning.project.cpts %}
+                        {% if cpt.team.id == planning.team.id %}
+                            {{ cpt.resource }}
+                            {% set definesCPT = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if definesCPT == false %}
+                        {{ "undefined"|trans }}
+                    {% endif %}
+                    </div>
+                    </div>
+            </div>
+            <div class="col-md-2">
+                <div class="total-affected recap-data" id="planning-{{ planning.team.id }}-{{ planning.project.id }}-totalAffected">
+                    <div class="title"><span>{{ "total.assigned"|trans }} :</span></div>
+                    <div class="value">{{ planning.project.getTotalAffected(planning.team)|number_format(2) }}</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="total-sold recap-data" id="planning-{{ planning.team.id }}-{{ planning.project.id }}-totalSold">
+                    <div class="title"><span>{{ "total.sold"|trans }} :</span></div>
+                    <div class="value">{{ planning.project.getTotalSold(planning.team)|number_format(2) }}</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="total-unsold recap-data" id="planning-{{ planning.team.id }}-{{ planning.project.id }}-totalUnsold">
+                    <div class="title"><span>{{ "total.unsold"|trans }} :</span></div>
+                    <div class="value">{{ planning.project.getTotalUnsold(planning.team)|number_format(2) }}</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>

@@ -1,0 +1,103 @@
+<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% block logo %}
+                <a class="navbar-brand" href="{{ path('act_resource_home') }}">
+                    <img src="{{ asset(logo) }}" />
+                </a>
+            {% endblock %}
+        </div>
+
+        <div class="collapse navbar-collapse" id="main-navbar-collapse">
+            <ul class="nav navbar-nav">
+
+                {% if app.user != null and is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{ path('sonata_admin_dashboard') }}">{{ "admin.dashboard"|trans }}</a></li>
+                    {% endif %}
+
+                    <li class="divider"></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ "summaries"|trans }} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header"><span class="glyphicon glyphicon glyphicon-time"></span> {{ "assignments"|trans }}</li>
+                            <li><a href="{{ path('act_resource_assignment_previsional') }}">{{ "assignments.previsional"|trans }}</a></li>
+                            <li><a href="{{ path('act_resource_year_summary') }}">{{ "summary.year.menu"|trans }}</a></li>
+                            <li><a href="{{ path('act_resource_resource_usage') }}">{{ "resource.usage.menu"|trans }}</a></li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><a href="{{ path('act_resource_various_summary') }}">{{"summaries.various"|trans}}</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+
+                    {{ render(controller('ActResourceBundle:User:preferedProjects', { 'trueLocale': app.request.locale })) }}
+                    {{ render(controller('ActResourceBundle:Team:allTeams', { 'trueLocale': app.request.locale })) }}
+                {% endif %}
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" id="language-selector">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="{{ asset('bundles/actresource/img/flags/' ~ app.request.locale ~ '.png') }}" />
+                        <span class="locale-text menu-text">{{ ("locale." ~ app.request.locale)|trans }}</span>
+                        <b class="caret"></b>
+                    </a>
+
+                    {% if app.request.attributes.get('_route_params')|length > 0 and app.request.attributes.get('_route')|length > 0 %}
+                        <ul class="dropdown-menu">
+                            <li><a class="locale-fr" href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'fr'})|merge(app.request.query.all)) }}"><img src="{{ asset('bundles/actresource/img/flags/fr.png') }}" /> {{ "language.french"|trans }}</a></li>
+                            <li><a class="locale-en" href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'en'})|merge(app.request.query.all)) }}"><img src="{{ asset('bundles/actresource/img/flags/en.png') }}" /> {{ "language.english"|trans }}</a></li>
+                        </ul>
+                    {% endif %}
+                </li>
+
+                {% if app.user != null and is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"></span> <span class="user-text menu-text">{{ app.user }}</span> <b class="caret"></b>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('act_resource_user_own_profile') }}"><i class="glyphicon glyphicon-user"></i> {{ "profile"|trans }}</a></li>
+                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="glyphicon glyphicon-off"></i> {{ "log.out"|trans }}</a></li>
+                            {% if not is_granted('ROLE_PREVIOUS_ADMIN') and is_granted('ROLE_SUPER_ADMIN') %}
+                                <li class="divider"></li>
+                                <li class="dropdown-header switch-user-dropdown-header"><span class="glyphicon glyphicon-eye-open"></span> {{ "user.impersonate"|trans }}</li>
+                                <li>
+                                    <input id="user-search" class="form-control" type="text" placeholder="{{'user.name'|trans}}">
+                                    <span id="user-typeahead-loading">
+                                        <img src="{{ asset('bundles/actresource/img/loading.gif') }}" />
+                                    </span>
+                                </li>
+
+                                <div id="userlist"></div>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_PREVIOUS_ADMIN') and app.request.attributes.get('_route_params')|length > 0 and app.request.attributes.get('_route')|length > 0 %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_switch_user': '_exit'})|merge(app.request.query.all)) }}">
+                                        <span class="glyphicon glyphicon-eye-close"></span> {{ "exit.impersonating"|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% else %}
+                    <li>
+                        <a class="btn" href="{{ path('fos_user_security_login') }}">
+                            <span class="glyphicon glyphicon glyphicon-lock"></span> <span class="user-text menu-text">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

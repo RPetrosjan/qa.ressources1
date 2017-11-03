@@ -1,0 +1,37 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+<div class="btn-group">
+
+    {#POUR LES ROLE_RP#}
+    {% if is_granted('ROLE_RP') %}
+    <a class="btn btn-primary" href="{{ path('admin_act_resource_subtask_edit', { 'id': object.id }) }}"><i class="icon-zoom-in icon-white"></i> {{ 'edit'|trans }}</a>
+    <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        <li><a href="{{ path('admin_act_resource_comment_list', {'referer':app.request.uri, 'filter[project][value]':object.project.id, "filter[task][value]": object.id }) }}"><i class="icon-share"></i> {{ "comment"|trans }}</a></li>
+        <li><a href="{{ path('admin_act_resource_comment_create', {'referer':app.request.uri, 'projectFilter':object.project.id, 'taskFilter': object.id}) }}"><i class="icon-share"></i> {{ "comment.add"|trans }}</a></li>
+    </ul>
+
+    {% else %}
+    {#POUR LES ROLE_USER#}
+    <a class="btn btn-primary" href="{{ path('admin_act_resource_comment_list', {   'referer':app.request.uri,
+                                                                                'filter[project][value]':object.project.id,
+                                                                                "filter[task][value]": object.id }) }}">
+        <i class="icon-zoom-in icon-white"></i>
+        {{ "comment"|trans }}
+    </a>
+    <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="{{ path('admin_act_resource_comment_create', { 'referer':app.request.uri,
+                                                                'projectFilter':object.project.id,
+                                                                'taskFilter': object.id})}}">
+                <i class="icon-share"> </i>
+                {{ "comment.add"|trans }}
+            </a>
+        </li>
+    </ul>
+    {% endif %}
+
+</div>
+{% endblock %}

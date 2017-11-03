@@ -1,0 +1,15 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field%}
+
+    {% if (app.user.username == object.user) or (is_granted("ROLE_RP")) %}
+    <div class="btn-group">
+        <a href="{{ path('admin_act_resource_comment_edit', {'referer':app.request.uri, 'id':object.id }) }}" class="btn edit_link btn-small" title="edit comm">
+            <i class="icon-edit"></i>
+                {{ "edit"|trans }}
+        </a>
+
+    </div>
+    {% endif %}
+
+{% endblock %}

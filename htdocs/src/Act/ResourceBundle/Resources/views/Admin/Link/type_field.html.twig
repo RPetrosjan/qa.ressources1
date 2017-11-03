@@ -1,0 +1,11 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+    {% if value == 1 %}
+        {{ "url"|trans }}
+    {% elseif value == 2 %}
+        {{ "file"|trans }}
+    {% else %}
+        {{ "url.internal"|trans }}
+    {% endif %}
+{% endblock %}

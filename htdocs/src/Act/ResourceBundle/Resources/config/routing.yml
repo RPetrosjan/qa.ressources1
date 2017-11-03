@@ -1,0 +1,104 @@
+act_resource_home:
+    pattern:   /
+    defaults:  { _controller: ActResourceBundle:Base:index }
+
+act_resource_home_ajax:
+    pattern:   /ajax
+    defaults:  { _controller: ActResourceBundle:Base:ajax }
+    options:
+        expose: true
+
+act_resource_user_crud:
+    resource: "routing/user.yml"
+    prefix:   /user
+
+act_resource_team_crud:
+    resource: "routing/team.yml"
+    prefix:   /team
+
+act_resource_resource_crud:
+    resource: "routing/resource.yml"
+    prefix:   /resource
+
+act_resource_project_crud:
+    resource: "routing/project.yml"
+    prefix:   /project
+
+act_resource_project_planning:
+    resource: "routing/planning.yml"
+    prefix:   /project
+
+act_resource_task_crud:
+    resource: "routing/task.yml"
+    prefix:   /task
+
+act_resource_export_crud:
+    resource: "routing/export.yml"
+    prefix:   /export
+
+act_resource_simulation_routes:
+    resource: "routing/simulation.yml"
+    prefix:   /simulation
+
+act_resource_assignment_previsional:
+    pattern: /previsional
+    defaults: { _controller: ActResourceBundle:Assignment:previsionalAssignments }
+
+act_resource_assignment_change_subtask:
+    pattern: /change-subtask
+    defaults: { _controller: ActResourceBundle:Assignment:changeSubTask }
+    options:
+        expose: true
+
+act_resource_assignment_active_project:
+    pattern: /active-project
+    defaults: { _controller: ActResourceBundle:Assignment:getActiveProjectPerWeekAndResource }
+    options:
+        expose: true
+
+act_resource_year_summary:
+    pattern:  /year-summary
+    defaults: { _controller: "ActResourceBundle:YearSummary:show"}
+
+act_resource_disable_project:
+  pattern: /admin/disable/project/{id}
+  defaults: { _controller: "ActResourceBundle:Project:disableProject"}
+  requirements: { id:  \d+ }
+
+act_resource_resource_usage:
+  pattern: /resource/usage
+  defaults: { _controller: "ActResourceBundle:ResourcesUsage:index"}
+
+act_resource_resource_usage_filtered_projects:
+    pattern: /resource/usage/projects/filtered
+    defaults: { _controller: ActResourceBundle:ResourcesUsage:getFilteredProjects }
+    options:
+        expose: true
+
+act_resource_resource_list:
+ pattern: /resource/usage/list
+ defaults: { _controller: "ActResourceBundle:ResourcesUsage:getResourcesAjax"}
+
+act_resource_resource_show:
+ pattern: /resource/usage/show
+ defaults: { _controller: "ActResourceBundle:ResourcesUsage:show"}
+
+# Import all route annotations
+act_resource_annotations:
+    resource: "@ActResourceBundle/Controller"
+    type:     annotation
+
+act_resource_details_resource:
+    pattern: /resource/details/{id}
+    defaults: { _controller: "ActResourceBundle:Resource:detailsResourcePage"}
+    requirements: { id:  \d+ }
+
+# Rest routes
+act_resource_rest_select:
+    path: /rest/data/select/{token}/{query}
+    defaults: { _controller: "ActResourceBundle:Rest:select"}
+
+# Get Route Nom Project
+act_resource_rest_project:
+    path: /rest/data/selectproject/{nomproject}
+    defaults: { _controller: "ActResourceBundle:Rest:selectproject"}

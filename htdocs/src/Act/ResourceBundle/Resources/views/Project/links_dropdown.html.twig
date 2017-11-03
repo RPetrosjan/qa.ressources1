@@ -1,0 +1,81 @@
+<ul class="dropdown-menu" role="menu">
+    {% if is_granted('ROLE_RP') %}
+        <li>
+            <a data-toggle="modal" href="#replaceResource">
+                <i class="glyphicon glyphicon-random"></i> {{ "project.replace"|trans }}
+            </a>
+        </li>
+
+        <li>
+            <a data-toggle="modal" href="#shiftProject">
+                <i class="glyphicon glyphicon-resize-horizontal"></i> {{ "project.shift"|trans }}
+            </a>
+        </li>
+
+        <li class="divider"></li>
+
+        {% if advanced is defined and advanced %}
+            <li>
+                <a href="{{ path('act_resource_project_show', { 'id': project.id }) }}">
+                    <i class="glyphicon glyphicon-fullscreen"></i> {{ "project.planning.simple"|trans }}
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{{ path('act_resource_project_planning_show', { 'id': project.id, 'referer': app.request.uri }) }}">
+                    <i class="glyphicon glyphicon-fullscreen"></i> {{ "project.planning.advanced"|trans }}
+                </a>
+            </li>
+        {% endif %}
+
+        <li>
+            <a href="{{ path('admin_act_resource_project_edit', { 'id': project.id, 'referer': app.request.uri }) }}">
+                <i class="glyphicon glyphicon-edit"></i> {{ "project.edit"|trans }}
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ path('admin_act_resource_project_projectcpt_list', {'id': project.id, 'referer': app.request.uri }) }}">
+                <i class="glyphicon glyphicon-hand-left"></i> {{ "project.cpts.manage"|trans }}
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ path('act_resource_project_export', {'id': project.id, 'referer': app.request.uri }) }}">
+                <i class="glyphicon glyphicon-share-alt"></i> {{ "tasks.export"|trans }}
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ path('act_resource_begin_simulation', {'id': project.id, 'referer': app.request.uri }) }}">
+                <i class="glyphicon glyphicon-play"></i> {{ "simulation.throw"|trans }}
+            </a>
+        </li>
+
+        <li class="divider"></li>
+    {% endif %}
+
+    <li>
+        <a href="{{ path('act_resource_project_prefered_teams', {'id': project.id, 'referer': app.request.uri }) }}">
+            <i class="glyphicon glyphicon-heart"></i> {{ "prefered.teams"|trans }}
+        </a>
+    </li>
+
+    <li>
+        <a href="{{ path('admin_act_resource_project_comment_list', {'id': project.id, 'referer': app.request.uri }) }}">
+            <i class="glyphicon glyphicon-comment"></i> {{ "comments"|trans }}
+        </a>
+    </li>
+
+    <li>
+        <a href="{{ path('admin_act_resource_project_link_list', {'id': project.id, 'referer': app.request.uri }) }}">
+            <i class="glyphicon glyphicon-paperclip"></i> {{ "links"|trans }}
+        </a>
+    </li>
+
+    <li>
+        <a href="{{ path('act_resource_project_tasks', {'id': project.id, 'referer': app.request.uri }) }}">
+            <i class="glyphicon glyphicon-tasks"></i> {{ "tasks"|trans }}
+        </a>
+    </li>
+</ul>

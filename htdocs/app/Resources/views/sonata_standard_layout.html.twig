@@ -1,0 +1,115 @@
+{# EXTENDS FROM THE MAIN LAYOUT #}
+{% extends 'SonataAdminBundle::standard_layout.html.twig' %}
+
+{# ADD CUSTOM ID TO HTML TAG ON ADMIN PAGES #}
+{% block html_attributes %}
+    {% spaceless %}
+        {{ parent() }}
+        id="admin-page"
+    {% endspaceless %}
+{% endblock %}
+
+{# ADD SHORTCUT ICON #}
+{% block meta_tags %}
+    {{ parent() }}
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" />
+{% endblock %}
+
+{# ADD CUSTOM STYLESHEETS #}
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% stylesheets filter="cssrewrite"
+        'libs/colorpicker/colorpicker.css'
+        'bundles/actmain/css/main.css'
+        'bundles/actmain/css/admin.css'
+    %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{# ADD CUSTOM TOP MENU #}
+{% block sonata_header %}
+    {% include ':Parts:menu.html.twig' with {'logo': 'bundles/actresource/img/ActRessources_40.png'} %}
+    {% block sonata_top_nav_menu %}{% endblock %}
+{% endblock %}
+
+{# ADD SONATA BREADCRUMBS IN CONTENT HEADER #}
+{% block sonata_page_content_header %}
+    {% if admin_pool is defined %}
+        <div class="content-breadcrumbs">
+            {% block sonata_breadcrumb %}
+                {% if _breadcrumb is not empty or action is defined %}
+                    <ol class="nav navbar-top-links breadcrumb">
+                        {% if _breadcrumb is empty %}
+                            {% if action is defined %}
+                                {% for menu in admin.breadcrumbs(action) %}
+                                    {% if not loop.last  %}
+                                        <li>
+                                            {% if menu.uri is not empty %}
+                                                <a href="{{ menu.uri }}">{{ menu.label|raw }}</a>
+                                            {% else %}
+                                                {{ menu.label }}
+                                            {% endif %}
+                                        </li>
+                                    {% else %}
+                                        <li class="active"><span>{{ menu.label }}</span></li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            {{ _breadcrumb|raw }}
+                        {% endif %}
+                    </ol>
+                {% endif %}
+            {% endblock sonata_breadcrumb %}
+        </div>
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
+
+{% block side_bar_after_nav %}
+    <p class="text-center small" style="border-top: 1px solid #444444; padding-top: 10px; color: white;">
+        {{ "site.title"|trans }} &copy; {{ "now"|date("Y") }}<br/>
+        Version {{ version }}
+    </p>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts output='js/sonata.js'
+        'libs/js/modernizr.js'
+        'libs/colorpicker/bootstrap-colorpicker.js'
+        'bundles/fosjsrouting/js/router.js'
+        'bundles/bazingajstranslation/js/translator.min.js'
+        'bundles/actmain/js/main.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/actmain/js/impersonate.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.colorpicker').colorpicker();
+            $(".datepicker").datepicker($.datepicker.regional[ "{{ app.request.locale }}" ]);
+
+            $(".datepicker.start").datepicker("option", "onSelect", function(selected) {
+                $(".datepicker.end").datepicker("option","minDate", selected)
+            });
+
+            $(".datepicker.end").datepicker("option", "onSelect", function(selected) {
+                $(".datepicker.start").datepicker("option","maxDate", selected)
+            });
+
+            var start = $( ".datepicker.start" ).datepicker( "getDate" );
+            var end = $( ".datepicker.end" ).datepicker( "getDate" );
+            if(start != null && end != null) {
+                $(".datepicker.end").datepicker("option", "minDate", start)
+                $(".datepicker.start").datepicker("option", "maxDate", end)
+            }
+        });
+    </script>
+{% endblock %}

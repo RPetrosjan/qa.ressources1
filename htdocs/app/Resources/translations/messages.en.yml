@@ -1,0 +1,736 @@
+list.label__action: Actions
+unknown.error.contact.admin: An unknown error occured. Please contact the site administrator.
+breadcrumb.link_project_activity_list: List of project analysis
+breadcrumb.link_project_activity_data_list: Additional data
+breadcrumb.link_project_activity_data_create: New project analysis data
+breadcrumb.link_project_activity_profile_list: Overrides of profiles costs per project
+form.label_project_activity_data: Additional data
+form.label_project_activity_profiles: Profiles daycost overrides
+form.label_project: Project
+hello: Hello
+add: Add
+name: Name
+desc: Description
+project: Project
+resource: Resource
+phase: Phase
+prefill: Prefill
+profile: Profile
+sales: Sales
+week: Week
+close: Close
+year: Year
+period: Period
+daycost: Dayly cost
+day(s): Day(s)
+holidays: holidays
+display.define: Define display
+display.period: Choose the period to display
+week.start: Starting week
+week.end: Ending week
+check.activityreport: Check activity reports
+days.assigned: days(s) assigned
+projects.active: Active projects
+projects.included: Projects taken into account
+project.idle: Idle projects
+my.reports: My reports
+my.reports.commit: Validate reports
+my.reports.commit.confirm: Beware, you won't be able to modify this week reports once validation is done. Is it OK ?
+my.reports.commit.exists: This week reports are already validated
+my.reports.commit.incomplete: Reports for this week are incomplete. Please complete them and validate.
+my.reports.commit.validated: Week activity reports were successfuly validated.
+my.reports.commit.not.allowed: Modifications are not allowed on validated reports.
+reports: Reports
+report.description: Description
+report.project: Project
+report.phase: Phase
+report.profile: Profile
+report.sales: Sales (m/d)
+report.support: Support
+report.description.to.complete: Description to complete
+report.add: Add the activity report
+report.added: Activity report added
+report.delete: Delete the activity report
+report.deleted: Activity report deleted
+resource.active: Active resources
+resource.idle: Idle resources
+running.projects.disabled: Running projects disabled
+project.activity.type.forfait: Flat fee
+project.activity.type.reel: Real
+activity.reports: Activity reports
+my.activity.report: My Activity Report
+activity.report: Activity Reports
+phases: Phases
+profiles: Profiles
+reports: Reports
+support: Support
+project.activity.manager.internal: Actency project manager
+project.activity.manager.client: Client project manager
+project.activity.type: Type of invoicing
+project.activity: Project analysis
+project.activity.data: Project analysis data
+project.activity.new: New project analysis
+data.additional: Additional data
+title: Title
+information: Information
+profiles.overrides: Cost per profiles
+project.activity.profile.new: New override of a profile day cost
+project.activity.profile: Profile day cost override
+week.from.to: Week from %start% to %end%
+prefill.tooltip: Only available if no data was entered
+project.select: Select a project
+phase.select: Select a phase
+profile.select: Select a profile
+add: Add
+actions: Actions
+home.return: Return to home
+exit.impersonating: Exit impersonating
+admin.dashboard: Administration
+activated?: Activated ?
+all.projects: All projects
+both: Both
+and: And
+associated.user: Linked user
+author: Author
+back: Back
+BtnCommProject: projects comments
+by: By
+cancel: Cancel
+close: Close
+color: Color
+connection: Login
+cpf: Functional Project Manager
+credits: Credits
+dashboard: Dashboard
+date: Date
+date.end: End date
+date.start: Start date
+dates: Dates
+day: Day
+delete: Delete
+delete.successful: Delete successful
+disable: Disable
+duration: Duration
+edit: Edit
+email: Email
+empty.value: None
+entity.concerned: Concerned Entity
+end: End
+export: Export
+file: File
+first.login: First login
+from: From
+future: future
+help: Help
+hide.tasks: Hide tasks
+hide.the: Hide the
+in: In
+language: Language
+language.english: English
+language.french: French
+locale.en: English
+locale.fr: French
+log.out: Log out
+manager: Manager
+move.tasks: Move tasks
+name: Name
+code: Code
+name.short: Identification Code
+no: No
+no.results: No results
+open_days: working
+other.filters: Other filters
+overload: Overload
+past: past
+reinitialize: Reset
+ratio.available: Available ratio
+replace: Replace
+reset: Reset
+save: Save
+schedule: Schedule
+schedule.projects: Projects schedule
+see: See
+show.the: Show the
+start: Start
+starting.from: Starting from
+the: the
+the.future: The future
+the.past: The past
+time.unsold: Unsold time
+to: to
+to.import: Import
+total: Total
+total.assigned: Total affected
+total.sold: Total sold
+total.unsold: Total unsold
+total.general: Global total
+unavailable: Unavailable
+undefined: Undefined
+user: user
+username: Username
+validate: Validate
+wait: Wait
+warning: Warning
+week.start: Starting week
+week.end: Ending week
+welcome: Welcome
+with: With
+workload: Workload
+workload.sold: Workload sold
+workload.affected: Workload assigned
+year: Year
+yes: Yes
+access.forbiden.simulation: Prohibited action during a simulation
+access.limited.to.admin: Limited access to administrators
+access.limited.to.beneficiaries: Limited access to beneficiaries
+access.limited.to.rp: Limited access to managers
+access.limited.to.rp.and.cpt: Limited access to managers and technical project managers
+account.linked_to_resource: "Your account is linked to the resource : <span class=\"resource-name\">%resource%</span>"
+account.unlinked: Your account is not linked to any resource !
+account.unlinked2: For the system to work properly, please link your account to a resource.
+activity.reports: Activity reports
+activity.report: Activity report
+alert.error: Error
+alert.info: Info
+alert.success: Success
+alert.warning: Warning
+assignment.error: Assignment Error
+assignment.out.of.subtask: The assignment is out of the subtask bounds
+assignment.out.of.task: The assignment is out of the task bounds
+assignments: Assignments
+assignments.previsional: Previsional Assignments
+assignments.previsional.help: This page displays resources assignments for one or more teams, for one week. You can choose the week and the teams displayed with the "Define Display" button.
+bankholiday.add: Add a bankholiday
+bankholiday.add.help: A bankholiday is linked to one or more locations, you can use CTRL or SHIFT keyboard buttons to select more than one location.
+bankholiday.addedit: Add/edit a bankholiday
+bankholiday.edit: Edit a bankholiday
+bankholiday.list: Bankholiday list
+bankholiday.list.help: This interface allows you to manage holidays.
+bankholiday.delete.warning: Deleting a bank holiday is irreversible, do you really want to continue ?
+bankholidays: Bankholidays
+choose.answer: Choose answer
+choose.a.project: Choose a project
+choose.a.resource: Choose a resource
+choose.a.resource.before: Please choose a resource before going on
+choose.a.task: Choose a task
+choose.a.subtask: Choose a subtask
+choose.teams.to.display: Choose teams to display
+choose.team.to.display: Choose the team to display
+choose.period.to.display: Choose the period to display
+choose.the.replaced: Choose the replaced
+choose.the.replacing: Choose the replacing
+client: Client
+client.add: Add a client
+client.addedit: Add/edit a client
+client.delete.warning: Deleting a client is irreversible, do you really want to continue ?
+client.edit: Edit a client
+client.list: Client list
+client.list.help: This interface allows you to manage specific client.
+client.contact.name: Contact name on the client side
+clients: Clients
+comment: Comment
+comment.add: Add a comment
+comment.edit: Edit a comment
+comment.list: comment list
+comments: Comments
+commontask.add: add a common-task
+commontask.addedit: Add/modify a common task
+commontask.BtnSubtask: subtasks
+commontask.list: common-task to a task
+commontask.list.help: Ici vous retrouvez toute les sous taches qui sont assigné à une tache precise
+commontask.ParentMetatask: parent Meta-task
+days: days
+days.assigned: assigned days
+days.calendar: calendar days
+days.open: working days
+days.sold: sold days
+days.working: working days
+import: Import
+import.column.order: The order of the columns is not important, additional columns will not be processed.
+import.model.to.follow: Model for importing
+import.date.any.format: A date in any format / Simple text in format "13/08/2012".
+import.excel.file: Excel file containing data to import
+import.project: Project import
+import.project.help: This page allows you to import a project and its tasks.<br/>To do so, please copy and paste an entire project (from the MS Projects software) in an Excel file format ".xlsx" then upload in the form below.
+import.project.number.of.days: A number of days, can be null.
+import.project.row.first: The first line contains only the project name in the "Task name" column.
+import.project.six.spaces.before.name: 6 spaces before the name.
+import.project.teams.or.profiles: Teams and profiles separated with the character ";".
+import.project.three.spaces.before.name: 3 spaces before the name.
+invalid.date: Invalid date supplied
+invalid.date.interval: The starting date must be lower than the ending date
+invalid.email: Invalid email
+invalid.parent.task: Invalid parent task supplied
+invalid.workload: Invalid workload supplied
+invalid.workload.sold: Invalid workload sold supplied
+invalid.year.or.week: Invalid year or week supplied
+ldap.connect.with.identifiers: Login with your LDAP credentials
+ldap.connect.with.identifiers.help: Your LDAP credentials are the one you use to log to your personnal computer. Please be aware that this is case sensitive.
+ldap.password: Password
+ldap.password.help: Your PC session password.
+ldap.password.help.warning: Be aware that the password is case sensitive.
+ldap.username: Username
+ldap.username.help: The username you use to log to your PC session.
+ldap.username.help.warning: Don't include "Actency\" before your username.
+link.delete.warning: Deleting a link is irreversible, do you want to continue ?
+link.edit: Edit a link
+link.add: Add a link
+link.addedit: Add/edit a project link
+link.list: List of project link
+links: Links
+link: Link
+links.common.help: For safety reasons, direct access to local links is disabled, please copy and paster the link in your web browser.
+list.filter.Advancedfilter: Advanced filters
+list.filter.hide: Hide filters
+list.filter.show: Show filters
+location: Location
+location.add: Add a location
+location.addedit: Add/edit a location
+location.delete.warning: Deleting a location is irreversible, do you really want to continue ?
+location.edit: Edit a location
+location.list: Location list
+location.list.help: This interface allows you to manage specific locations.
+locations: Locations
+metatask.add: Add a metatask
+metatask.addedit: Add/modify a meta-task
+metatask.BtnCommontask: subtasks
+metatask.fast.add: Swiftly create many metatasks
+metatask.list: projects Tasks
+metatask.list.help: Here you will find all Projects Tasks
+metatask.ParentProject: parent-projet
+metatasks: Metatasks
+metatasks.created: %number% metatask(s) created
+month: Month
+month.January: January
+month.February: February
+month.March: March
+month.April: April
+month.May: May
+month.June: June
+month.July: July
+month.August: August
+month.September: September
+month.October: October
+month.November: November
+month.December: December
+months.before.this.date: Months before this date
+months.after.this.date: Months after this date
+my.reports: My reports
+objects.advanced: Advanced objects
+objects.basic: Basic objects
+objects.manage: Manage objects
+objects.protected: Protected objects
+prefered.project.add.error: Error while trying to add prefered project
+prefered.project.add.or.remove: Add/delete prefered project
+prefered.project.added: Prefered project added
+prefered.project.removed: Prefered project removed
+prefered.team.add: Add a prefered team...
+prefered.teams: Prefered teams
+previsional.email: Previsional email
+previsional.email.info: You can choose to recieve each week, an email containing <b>the filling ratio</b> of selected teams.<br/> This email will be sent each Monday, at 1 AM. Don't forget to set your email address in your profile page.
+previsional.email.subscribe.for: "You subscribed for the previsional mail for the following teams :"
+profile: Profile
+profile.add: Add a profile
+profile.edit: Edit a profile
+profile.list: Profile list
+profile.list.help: This page allows you to manage profiles related to a team. These profiles are used to define more precisely tasks.
+profile.manage: Manage profiles
+profiles: Profiles
+project: Project
+project.signed: Project signed
+project.add: Add a project
+project.addedit: Add/edit a project
+project.cpts.help: This page allows you to select one technical project manager per team for this project.<br/>for more flexibility, you can choose any resources for any team.
+project.cpts.manage: Manage TPM
+project.edit: Edit project
+project.planning.advanced: Advanced planning
+project.planning.simple: Basic planning
+project.fast.create.meta: Metatasks fast creation
+project.fast.create.meta.help: This page allows you to swiftly create many metatasks for the project.
+project.delete.warning: Deleting a project is irreversible, and results in the suppression of every tasks and assignments, do you really want to continue ?
+project.links.help: This page allows you to add links and documents to the project.<br/>You can both upload a file or put the reference to a file in the <b>common</b> repertory.
+project.list: Project list
+project.list.help: This interface allows you to quickly manage specific projects
+project.management: Project management
+project.name: Project name
+project.planning.show: Show the planning
+project.replace: Replace X by Y
+project.search: Search a project
+project.shift: Shift project
+project.shift.message: "Shifting the project of %nbdays% working days, in the %timedirection% : %nbtask% task(s) and %nbass% assignment(s) shifted"
+project.shifting: Project shifting
+project.show.all: Show the whole project
+project.tasks: Project tasks
+project.tasks.export: Tasks export
+project.no.resources: There is no resources implied in the project, for this team and such display settings.
+project.type.presale.gt70: pre-sale > 70%
+typePresaleGT70: pre-sale > 70%
+project.type.presale.lt70: pre-sale < 70%
+typePresaleLT70: pre-sale < 70%
+project.type.signed: Signed project
+typeSigned: Signed project
+project.type.holiday: Holiday project
+typeHoliday: Holiday project
+project.type.internal: Internal project
+typeInternal: Internal project
+project.type.research: R&D project
+project.type.deactivate: Disabled project
+typeResearch: R&D project
+typeInactive: Disabled project
+projects: Projects
+projects.prefered: Prefered projects
+projects.list: Project list
+projects.recent: Recent projects
+projects.all: All projects
+resource.add.info: Warning! This resource won't be added to the google docs.
+resource.replacement: Replacement resource
+resource.add: Add a resource
+resource.add.help: interface to add or edit a resource on Act&resources
+resource.addedit: Add/edit a resource
+resource.delete.warning: Deleting a resource is irreversible, do you really want to continue ?
+resource.edit: Edit a resource
+resource.edit.info: Warning! These modifications won't be done in the google docs.
+resource.list: resources list
+resources: Resources
+resource.select: Please, select at least one resource
+resource.usage: Resources usage
+resources.nbr: Number of resources
+resources.assigned: Affected resources
+resources.charge.rate: Charge rate of resources
+role.rp.given.to: RP role given to %user%
+role.X.given.to: %role% role given to %user%
+role.X.removed.to: %role% removed to %user%
+roles: Roles
+roles.admin: Admin
+roles.manage: Manage roles
+roles.management.help: Warning, these modifications will take place only when the concerned user will reconnect !<br/><br/>These roles are hierarchical, so the admin also has the manager role.
+roles.management: Roles management
+roles.manager: Manager
+roles.user: User
+simulation.already.exists: User %user% already started a simulation on
+simulation.instruction.first: You can't create nor modify assignments or tasks while the simulation is running.
+simulation.instruction.second: As well, you can't delete projects, resources or teams until the simulation is over.
+simulation.none: You didn't start any simulation
+simulation.running: Simulation currently running
+simulation.throw: Start simulation
+simulation.thrown: Simulation started at %date% by %user%
+simulation.thrownsimulation: Simulation started !
+subtask.add: add a sub-task
+subtask.addedit: Add/modify a sub-task
+subtask.list: list of sub-task
+subtask.list.help: Ici vous retrouvez toute les sous taches qui sont assigné a la fois à une tache commune et a une tache principale.
+subtask.ParentTask: parent Commontask
+subtask.transform.task: technical project managers do not have the right to turn tasks into subtasks
+subtasks: Subtasks
+summaries: Summaries
+summaries.resource.use: Resources use
+summaries.various: Dashboard
+summary.year: Resources usage summary
+summary.year.menu: Yearly assignments
+summary.year.help: This page shows a global vision of the resources use during the year.<br/>Clic a table cell to have more information.
+summary.active.project: Projects with at least one assignment or task for the chosen period
+summary.active.resource: Resources with at least one assignment for the chosen period
+summary.idle.project: Active projects without assignments or tasks for the chosen period
+summary.idle.resource: Resources without assignment for the chosen period
+summary.running.project.disabled: Disabled projects with at least one assignment or task for the chosen period
+swift.cut.of.type.help: This page allows you to fast cut a %type% into sibling tasks.
+swift.cut.of.type: Swift cut of the %type% %task%
+swift.cut: Swift cut
+task: Task
+task.add.child: Add a sibling task
+task.add: Add a task
+task.delete.warning: Warning, this action is irreversible, do you want to continue ?
+task.edit.type: Edit a %type%
+task.export.from.project.help: This page allows to export all or some tasks of a projet to Excel.<br/> It can be handy to send the tasks to a functional projet manager after having shifted the project.
+task.export.from.project.help2: All project tasks <b>posterior</b> to this date will be exported.
+task.export.from.project: Project tasks export
+task.meta: Metatask
+task.move.access.message: The reordering task is limited to production managers, as well as technical project managers to some extent
+task.name: Task name
+task.sub: Subtask
+tasks: Tasks
+details: Details
+tasks.details: Tasks details
+tasks.export: Tasks export
+tasks.moved.not.saved: Warning, moved tasks are not saved !
+team: Team
+team.add: Add a team
+team.addedit: Add/edit a team
+team.BtnresourcesDetails: resources in team
+team.BtnSeeProfil: view profils
+team.BtnSeeProfil: view profils
+team.delete.warning: Deleting a team is irreversible, do you really want to continue ?
+team.edit: Edit a team
+team.list.help: This interface allows you to manage specific teams.
+team.list: Team list
+team.projects: Team projects
+team.recapweek.help: This page allows you to see the bandwidth used and available per week.<br/>Try to clic on the first week number to choose the period to display faster.
+team.recapweek.period.no.resources: "Period from %start% to %end% : no resources available, or no assignments for the team."
+team.recapweek: Weekly summary of resources use
+team.resource.number: Resources number
+team.show: Show team
+teams: Teams
+teams.profiles.linked: Associated teams/profiles
+teams.profiles: Teams/Profiles
+teamprofile.add: add a team profil
+teamprofile.addedit: add/edit a team profil
+teamprofile.list: liste of team profils
+path: Path
+type: Type
+user.add: Add a user
+user.addedit: Add/edit a user
+user.list.help: This page allows you to visualize all users and to manage their rights.
+user.list: User list
+user.name: Username
+user.own.profile: Your user profile
+user.search: Search an user
+users: Users
+user.impersonate: Switch user
+user.name: Username
+week: Week
+week.current: Current week
+week.next: Next week
+week.previous: Previous week
+weeks.previous: Previous weeks
+weeks.after.this.date: Weeks after this date
+weeks.before.this.date: Weeks before this date
+weeks: Weeks
+your.assignments: Your assignments
+your.colleagues: Your colleagues
+your.comments: Your comments
+your.manager: Your manager
+your.prefered.projects: Your prefered projects
+your.prefered.teams.help: This interface enables you to choose one or more prefered teams for this project.<br/> These teams will be <b>pre-loaded</b> when viewing the planning.
+your.prefered.teams: Your prefered teams
+your.rights: Your rights
+your.team: Your team
+mail.assignment.subject: Summary of updated assignments
+mail.assignment.new: New assignment
+mail.assignment.update: Assignment updated
+simulation.end: Simulation ended
+simulation.end.rollback: Cancel simulation modifications
+simulation.end.commit: Save simulation modifications
+added.assignments: assignment(s) added
+restored.assignments: assignment(s) restored
+updated.assignments: assignment(s) updated
+deleted.assignments: assignment(s) deleted
+unable:
+    to:
+        delete:
+          client: "Can not delete the client : %message%"
+          project: "Can not delete the project : %message%"
+          task: "Can not delete the task : %message%"
+          resource: "Can not delete the resource : %message%"
+          team: "Can not delete the team : %message%"
+          teamprofile: "Can not delete the team profile : %message%"
+        connect.ldap: Can not connect to the LDAP server.
+        authentify.ldap: Credentials invalid
+        find:
+            assignment: Can not find the assignment
+            bankholiday: Can not find the bankholiday
+            client: Can not find the client
+            comment: Can not find the comment
+            link: Can not find the link
+            location: Can not find the location
+            resource: Can not find the resource
+            selected.resources: Can not find the selected resources
+            project: Can not find the project
+            task: Can not find the task
+            team: Can not find the team
+            teamprofile: Can not find the team profile
+            metatask: Can not find the metatask
+            subtask: Can not find the subtask
+deleted:
+    assignment: Assignment deleted
+    bankholiday: Bankholiday deleted
+    client: Client deleted
+    comment: Comment deleted
+    link: Link deleted
+    location: Location deleted
+    project: Project deleted
+    resource: Resource deleted
+    task: Task deleted
+    team: Team deleted
+    teamprofile: Team profile deleted
+    user: User deleted
+created:
+    bankholiday: New bankholiday created
+    client: New client created
+    location: New location created
+    project: New project created
+    teamprofile: New team profile created
+    comment: New comment created
+    task: New task created
+    resource: New resource created
+able.to.authentify.ldap: LDAP authentication successful.
+successfuly.login.ldap: LDAP authentication successful.
+app.developed.with: An app developed with
+cancel.modifications: Rollback modifications
+conception_development: Conception/Development
+conflict.at.dates: "Conflict at dates : %txt% ... merger done."
+cpt: Technical project manager
+cpts: Technical project managers
+data.import: Import data
+database.void.first_import: The database is empty. The button below allows you to import places, holidays, teams, resources and the project Leaves and Absences.
+dates.bounds.invalid: start date must be lower than end date
+dedicated.to.cpt.organization: Dedicated to the TPM organization
+display.define: Define display
+display.definition: Definition of display
+error.no.team.no.resource: No team supplied, and your account isn't linked to any resource so we can't find your team.
+excel.export: Export to Excel
+export.project.error: An error occured during the project export...
+export.no.tasks.available: No task to export... Check the chosen date.
+export.tasks.from.to: Tasks export from %start% to %end%
+file.upload: File upload
+loaded.percentage: %percentage% % loaded
+logged.as: Logged in as %name%
+logo.and.favicon: Logo and favicon
+nbdays.must.be.positive: The number of days must be a positive number.
+no.resource.available: Sorry, no resource is available at the moment.
+no.special.filter: No special filter
+no.assignments: No assignments
+not.anymore.in.company: Not anymore present in the company
+not.assignable: Not assignable
+not.yet.in.company: Not yet present in the company
+only.available.ajax: Only available in AJAX
+planning.show.only.concerned.resources: Only display concerned resources over this period
+please.complete.required.fields: Please complete required fields.
+please.contact.a.manager: Please contact a manager or a project manager.
+save.modifications: Save modifications
+saved.modifications: Modifications saved
+unsaved.modifications: Beware, some data have not been saved
+saved.modifications.fail: Error, modifications not saved
+shif.project.of: Shift the project of
+show.only.resource.own.projects: Show only resources that are affected to my projects
+show.only.resource.selected.projects: Show only resources that are affected to selected projects
+site.description: A resource management application - Actency
+site.title: Act&resources
+transfert.assignments: %number% assignment(s) transfered from %from% to %to%.
+url: URL
+url.to.file: URL to file
+url.internal: Internal URL
+url.internal.help: Please copy/paste the url
+userguide.download: Download the user guide
+username.or.password.missing: Username or password not supplied
+validate.modifications: Commit modifications
+working.days.per.week: Working days per week
+working.days.per.week.short : Days/week
+you.are.not.in.this.list: You are not in this list ?
+you.are: You are
+you.dont.have.access.to.this.gdocs: You do not have permission to access this document Google Docs.
+ROLE_SONATA_USER_ADMIN_USER_GUEST : "Users : view"
+ROLE_SONATA_USER_ADMIN_USER_STAFF: "Users : view, create, edit"
+ROLE_SONATA_USER_ADMIN_USER_EDITOR: "Users : view, create, edit, delete and export"
+ROLE_SONATA_USER_ADMIN_USER_ADMIN: "Users : all access, can grant access"
+ROLE_SONATA_USER_ADMIN_GROUP_GUEST: "Groups : view"
+ROLE_SONATA_USER_ADMIN_GROUP_STAFF: "Groups : view, create, edit"
+ROLE_SONATA_USER_ADMIN_GROUP_EDITOR: "Groups : view, create, edit, delete and export"
+ROLE_SONATA_USER_ADMIN_GROUP_ADMIN: "Groups : all access, can grant access"
+ROLE_SONATA_ADMIN_PROJECT_GUEST: "Projects : view"
+ROLE_SONATA_ADMIN_PROJECT_STAFF: "Projects : view, create, edit"
+ROLE_SONATA_ADMIN_PROJECT_EDITOR: "Projects : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_PROJECT_ADMIN: "Projects : all access, can grant access"
+ROLE_SONATA_ADMIN_PROJECTCPT_GUEST: "Technical project manager : view"
+ROLE_SONATA_ADMIN_PROJECTCPT_STAFF: "Technical project manager : view, create, edit"
+ROLE_SONATA_ADMIN_PROJECTCPT_EDITOR: "Technical project manager : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_PROJECTCPT_ADMIN: "Technical project manager : all access, can grant access"
+ROLE_SONATA_ADMIN_METATASK_GUEST: "Metatask : view"
+ROLE_SONATA_ADMIN_METATASK_STAFF: "Metatask : view, create, edit"
+ROLE_SONATA_ADMIN_METATASK_EDITOR: "Metatask : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_METATASK_ADMIN: "Metatask : all access, can grant access"
+ROLE_SONATA_ADMIN_COMMONTASK_GUEST: "Task : view"
+ROLE_SONATA_ADMIN_COMMONTASK_STAFF: "Task : view, create, edit"
+ROLE_SONATA_ADMIN_COMMONTASK_EDITOR: "Task : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_COMMONTASK_ADMIN: "Task : all access, can grant access"
+ROLE_SONATA_ADMIN_SUBTASK_GUEST: "Subtask : view"
+ROLE_SONATA_ADMIN_SUBTASK_STAFF: "Subtask : view, create, edit"
+ROLE_SONATA_ADMIN_SUBTASK_EDITOR: "Subtask : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_SUBTASK_ADMIN: "Subtask : all access, can grant access"
+ROLE_SONATA_ADMIN_COMMENT_GUEST: "Comment : view"
+ROLE_SONATA_ADMIN_COMMENT_STAFF: "Comment : view, create, edit"
+ROLE_SONATA_ADMIN_COMMENT_EDITOR: "Comment : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_COMMENT_ADMIN: "Comment : all access, can grant access"
+ROLE_SONATA_ADMIN_LINK_GUEST: "Link : view"
+ROLE_SONATA_ADMIN_LINK_STAFF: "Link : view, create, edit"
+ROLE_SONATA_ADMIN_LINK_EDITOR: "Link : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_LINK_ADMIN: "Link : all access, can grant access"
+ROLE_SONATA_ADMIN_CLIENT_GUEST: "Client : view"
+ROLE_SONATA_ADMIN_CLIENT_STAFF: "Client : view, create, edit"
+ROLE_SONATA_ADMIN_CLIENT_EDITOR: "Client : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_CLIENT_ADMIN: "Client : all access, can grant access"
+ROLE_SONATA_ADMIN_TEAM_GUEST: "Team : view"
+ROLE_SONATA_ADMIN_TEAM_STAFF: "Team : view, create, edit"
+ROLE_SONATA_ADMIN_TEAM_EDITOR: "Team : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_TEAM_ADMIN: "Team : all access, can grant access"
+ROLE_SONATA_ADMIN_TEAMPROFILE_GUEST: "Team profile : view"
+ROLE_SONATA_ADMIN_TEAMPROFILE_STAFF: "Team profile : view, create, edit"
+ROLE_SONATA_ADMIN_TEAMPROFILE_EDITOR: "Team profile : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_TEAMPROFILE_ADMIN: "Team profile : all access, can grant access"
+ROLE_SONATA_ADMIN_RESOURCE_GUEST: "Resource : view"
+ROLE_SONATA_ADMIN_RESOURCE_STAFF: "Resource : view, create, edit"
+ROLE_SONATA_ADMIN_RESOURCE_EDITOR: "Resource : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_RESOURCE_ADMIN: "Resource : all access, can grant access"
+ROLE_SONATA_ADMIN_LOCATION_GUEST: "Location : view"
+ROLE_SONATA_ADMIN_LOCATION_STAFF: "Location : view, create, edit"
+ROLE_SONATA_ADMIN_LOCATION_EDITOR: "Location : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_LOCATION_ADMIN: "Location : all access, can grant access"
+ROLE_SONATA_ADMIN_BANKHOLIDAY_GUEST: "Bankholiday : view"
+ROLE_SONATA_ADMIN_BANKHOLIDAY_STAFF: "Bankholiday : view, create, edit"
+ROLE_SONATA_ADMIN_BANKHOLIDAY_EDITOR: "Bankholiday : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_BANKHOLIDAY_ADMIN: "Bankholiday : all access, can grant access"
+ROLE_SONATA_ADMIN_REPORT_GUEST: "Activity report : view"
+ROLE_SONATA_ADMIN_REPORT_STAFF: "Activity report : view, create, edit"
+ROLE_SONATA_ADMIN_REPORT_EDITOR: "Activity report : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_REPORT_ADMIN: "Activity report : all access, can grant access"
+ROLE_SONATA_ADMIN_PHASE_GUEST: "Project phase : view"
+ROLE_SONATA_ADMIN_PHASE_STAFF: "Project phase : view, create, edit"
+ROLE_SONATA_ADMIN_PHASE_EDITOR: "Project phase : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_PHASE_ADMIN: "Project phase : all access, can grant access"
+ROLE_SONATA_ADMIN_PROFILE_GUEST: "Project profile : view"
+ROLE_SONATA_ADMIN_PROFILE_STAFF: "Project profile : view, create, edit"
+ROLE_SONATA_ADMIN_PROFILE_EDITOR: "Project profile : view, create, edit, delete and export"
+ROLE_SONATA_ADMIN_PROFILE_ADMIN: "Project profile : all access, can grant access"
+ROLE_LDAP_LOGGED: LDAP user (ROLE_LDAP_LOGGED)
+ROLE_USER: User (ROLE_USER)
+"ROLE_USER: ROLE_LDAP_LOGGED": User (ROLE_USER)
+ROLE_RP: Manager (ROLE_RP)
+"ROLE_RP: ROLE_USER": Manager (ROLE_RP)
+ROLE_SONATA_ADMIN: All administration access (SONATA_ADMIN)
+ROLE_ADMIN: All administration and manager access (ROLE_ADMIN)
+"ROLE_ADMIN: ROLE_USER, ROLE_RP, ROLE_SONATA_ADMIN": All administration and manager access (ROLE_ADMIN)
+ROLE_SUPER_ADMIN: All access (SUPERADMIN)
+"ROLE_SUPER_ADMIN: ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH": All access (SUPERADMIN)
+ROLE_ALLOWED_TO_SWITCH: Can fake an other user (ROLE_ALLOWED_TO_SWITCH)
+resources.usage: Resources usage rate
+resource.usage.menu: Occupancy rate
+resource.usage.generate: Generate dashboard
+resource.usage.export.excel: Excel export
+project.types: Project types
+project.types.all: All project types
+project.types.included: Project types taken into account
+teams.and.resources: Teams and resources
+dashboard.configure: Dashboard configuration
+select.at.least.one.resource: Please select at least one resource
+team.or.profile.not.exist: "Line %line% - The team or profile does not exist : %te%"
+report.not.found: The report doesn't exist
+report.prefill.error: It's not possible to use prefill when reports are already saved
+report.prefill.no.assignments: No assignments were found for the current week
+to.complete: To complete
+task.generate: Task generation
+task.generate.help: This page allows to create many tasks at once faster.
+tasks.created: Tasks were created
+activity.report.reminder: Reminder - Activity Report
+activity.report.reminder.sent: The reminder was sent successfuly.
+activity.report.reminder.not.sent: The reminder was not send, because either the resource has no linked user, either the reports are already committed.
+activity.report.not.yet.commited: You have not yet validated your activity reports for week %week%.
+activity.report.please.commit: Please would you mind complete and validate these reports before the end of the day.
+activity.report.complete: Complete your reports
+activity.report.remind: Send a reminder
+thanks.in.advance: Thanks in advance
+your.resource.manager: Your resource manager
+activity.report.description: Write a description please.
+control.dashboard.display: Control your dashboard display
+other.projects: Other projects
+nearly: Nearly
+resource.assignment.details: Details of resource assignments
+slack.username: Slack username

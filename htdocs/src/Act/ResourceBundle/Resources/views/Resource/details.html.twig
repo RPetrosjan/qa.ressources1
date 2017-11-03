@@ -1,0 +1,53 @@
+
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block body_content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ 'resource.assignment.details'|trans }}</h2>
+                <h3>{{ resource }} ({{ resource.team }})</h3>
+
+                <table id="week-projects" class="table table-bordered table-condensed table-striped">
+                    <thead>
+                    <tr>
+                        <th class="project-name">
+                            {{ 'project'|trans }}
+                        </th>
+
+                        <th class="project-workload">
+                            {{ 'workload'|trans }}
+                        </th>
+
+                        <th class="project-resources">
+                            {{ 'dates'|trans }}
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for key,d in data %}
+                        <tr>
+                            <td class="body-project-label" style="background-color:rgba({{ d['project'].color|rgbColor }}, 0.5) !important;">
+                                <a href="{{ path('act_resource_project_show', {'id' : d['project'].id }) }}" title="{{ d['project'].name }}">
+                                    {{ d['project'].name }}
+                                </a>
+                            </td>
+
+                            <td class="project-workload">
+                                {{ d['workload'] }} {{ 'days'|trans }} <br/>
+                                {{ 'nearly'|trans }} {{ d['workload']|workloadFormat }}
+                            </td>
+
+                            <td class="project-dates">
+                                {{ 'from'|trans }} {{ d['days']['first']|date("d/m/Y") }}<br/>
+                                {{ 'to'|trans }} {{ d['days']['last']|date("d/m/Y") }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

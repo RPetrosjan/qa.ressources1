@@ -1,0 +1,13 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+    <div class="resource-name-field">
+        <div class="resource-name">{{ value }}</div>
+        {% if object.user != null %}
+            <div class="resource-user">
+                <span>{{ 'user'|trans }}:</span>
+                <a href="{{ path('admin_sonata_user_user_edit', {'id': object.user.id}) }}">{{ object.user }}</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

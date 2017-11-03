@@ -1,0 +1,11 @@
+act_resource_begin_simulation:
+    pattern:  /begin
+    defaults: { _controller: "ActResourceBundle:Simulation:begin" }
+
+act_resource_commit_simulation:
+    pattern:  /commit
+    defaults: { _controller: "ActResourceBundle:Simulation:commit" }
+
+act_resource_rollback_simulation:
+    pattern:  /rollback
+    defaults: { _controller: "ActResourceBundle:Simulation:rollback" }

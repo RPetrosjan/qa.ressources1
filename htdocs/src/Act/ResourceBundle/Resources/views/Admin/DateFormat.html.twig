@@ -1,0 +1,28 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field%}
+       {% if value is empty %}
+           &nbsp;
+       {% else %}
+           {# passing the locale in some way here would be great, it is not available in twig.. #}
+           {# scratch that, it is not necessary with intl.extension... #}
+           {% if app.request.locale is defined %}
+               {% set dflt_locale = app.request.locale %}
+           {% else %}
+               {% set dflt_locale = 'fr' %}
+           {% endif %}
+
+            {% if dflt_locale ==  'en' %}
+               {% set dayDate = value|date("F d, Y") %}
+           {% else %}
+                {% set day = value|date("d") %}
+                {% set monthstring = "month."~value|date("F") %}
+                {% set month = monthstring|trans %}
+                {% set year = value|date("Y") %}
+                {% set dayDate = day~" "~month~" "~year %}
+           {% endif %}
+
+           {{dayDate}}
+
+       {% endif %}
+   {% endblock %}

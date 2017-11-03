@@ -1,0 +1,200 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ "assignments.previsional"|trans }}, W{{ pa.getWeek() }} - {{ parent() }}
+{% endblock %}
+
+{% block body_attributes %}id="previsional-assignments"{% endblock %}
+
+{% block body_title_right %}
+    <div class="btn-group navigation-buttons">
+        <a class="btn btn-default previous-btn" title="{{ "week.previous"|trans }}" href="{{ pa.getPrevURL() }}"><i class="glyphicon glyphicon-arrow-left"></i></a>
+        <a class="btn btn-default reset-btn" title="{{ "week.current"|trans }}" href="{{ pa.getResetURL() }}"><i class="glyphicon glyphicon-map-marker"></i></a>
+        <a class="btn btn-default next-btn" title="{{ "week.next"|trans }}" href="{{ pa.getNextURL() }}"><i class="glyphicon glyphicon-arrow-right"></i></a>
+    </div>
+
+    <div class="btn-group display-modal-button">
+        <a class="btn btn-primary" data-toggle="modal" href="#chooseDates"><i class="glyphicon glyphicon-zoom-in"></i> {{ "display.define"|trans }}</a>
+        <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{ path('act_resource_previsional_assignments_export', {'teams': pa.getTeamsIds(), 'projects': pa.getProjectsIds(), 'filter': pa.getFilter(), 'week': pa.getWeek(), 'year': pa.getYear()}) }}">
+                    <i class="glyphicon glyphicon-export"></i> {{ "excel.export"|trans }}
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "assignments.previsional"|trans }}, <span class="week">W{{ pa.getWeek() }}</span>
+    <i class="glyphicon glyphicon-question-sign help-popover" data-content="{{ "assignments.previsional.help"|trans }}"></i>
+{% endblock %}
+
+{% block body_content %}
+    {% for team in pa.getTeams() %}
+    <table class="table table-bordered table-striped {% if loop.last == false %}pageBreak{% endif %} stickyHeader">
+        <thead>
+            <tr>
+                <th colspan="6" style="text-align:center; background-color: {{ team.getColor }};">{{ team }}</th>
+            </tr>
+            <tr>
+                <th rowspan="2" class="weeknum" style="background-color: {{ team.getColor }};">W{{ pa.getWeek() }}</th>
+                {% for day in pa.getPeriod() %}
+                    <th class="day white-background {% if day|date('d/m/Y') == "now"|date('d/m/Y') %}today{% endif %}">
+                        {{ day|localeDate('medium','none',null,'EEEE') }}
+                    </th>
+                {% endfor %}
+            </tr>
+
+            <tr>
+                {% for day in pa.getPeriod() %}
+                    <th class="day white-background {% if day|date('d/m/Y') == "now"|date('d/m/Y') %}today{% endif %}">
+                        {{ day|date('d/m') }}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% set realNb = 0 %}
+            {% for resource in team.resources %}
+                {% if resource.assignments|length > 0 %}
+                <tr class="ressrow">
+                    <td class="resource" title="{{ resource.name }}" style="background-color: rgba({{ team.color|rgbColor }}, {% if realNb is even %}0.5{% else %}1{% endif %});" data-content="{{ "working.days.per.week"|trans }} : {{ resource.daysperweek }}<br/>{{ "date.start"|trans }} : {{ resource.start|date('d/m/Y') }} {% if resource.end %}<br/>{{ "date.end"|trans }} : {{ resource.end|date('d/m/Y') }} {% endif %}<br/> {{ "location"|trans }} : {{ resource.location }}">
+                        {{ resource.nameshort }}
+                    </td>
+                    {% for day in pa.getPeriod() %}
+                        {% set dayAssignments = resource.getAssignments(day) %}
+                        {% set dayBankholidays = pa.getBankholidays(day, resource.location) %}
+                        {% set dayTotal = resource.getTotalAssigned(day) %}
+
+                        {% if dayBankholidays|length > 0 %}
+                            <td class="bankholiday">
+                                {% for bankholiday in dayBankholidays %}
+                                    {{ bankholiday.name }}
+                                {% endfor %}
+                            </td>
+                        {% else %}
+                            <td>
+                                {% for assignment in dayAssignments %}
+                                    <div class="dayAssign" style="width:{% if loop.length > 1 %}{{ (assignment.getWorkload() / dayTotal) * 100 }}{% else %}{% if assignment.getWorkload() > 1 %}100{% else %}{{ assignment.getWorkload() * 100 }}{% endif %}{% endif %}%; background-color:rgba({{ assignment.project.color|rgbColor }}, 0.5);">
+                                        <div class="inner">
+                                            <a class="project-name" href="{{ path('act_resource_project_show', {'id': assignment.project.id}) }}" title="{{ "planning.show"|trans }}">
+                                                {{ assignment.project.name }}
+                                            </a>
+
+                                            <br/>
+                                            {% if assignment.commontask %}
+                                                {{ assignment.commontask.metatask }}<br/>
+                                                {{ assignment.commontask }}<br/>
+                                            {% endif %}
+
+                                            {% if assignment.subtask %}
+                                                {{ assignment.subtask }}<br/>
+                                            {% endif %}
+
+                                            <span class="workload">{{ assignment.getWorkload()|workloadFormat }}</span><br/>
+                                            {% if assignment.comment %}<i class="planning-comment">&laquo;{{ assignment.comment }}&raquo;</i> {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% set realNb = realNb + 1 %}
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+
+
+    <div class="modal fade" id="chooseDates">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="choose-dates" method="get" action="{{ path('act_resource_assignment_previsional') }}" class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h3>{{ "display.definition"|trans }}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h6>{{ "choose.teams.to.display"|trans }}</h6>
+                        <div class="control-group">
+                            <label for="teams" class="control-label">{{ "team"|trans }}</label>
+                            <div class="controls">
+                                <select id="teams" name="teams[]" multiple="multiple" class="form-control">
+                                    {% for t in allTeams %}
+                                        <option value="{{ t.id }}" {% if t in pa.getTeams() %}selected="selected"{% endif %} style="color:{{t.color}};">{{ t }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <h6>{{ "choose.period.to.display"|trans }}</h6>
+                        <div class="control-group">
+                            <label for="week" class="control-label">{{ "week"|trans }}</label>
+                            <div class="controls">
+                                <input id="week" name="week" type="text" required="required" value="{{ pa.getWeek() }}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="year" class="control-label">{{ "year"|trans }}</label>
+                            <div class="controls">
+                                <input id="year" name="year" type="text" required="required" value="{{ pa.getYear() }}" class="form-control">
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <div id="previsional-filters">
+                            <h6>{{ "other.filters"|trans }}</h6>
+                            <div class="radio">
+                                <label for="no-filter">
+                                    <input type="radio" {% if pa.getFilter() == 0 %}checked=""{% endif %} value="0" id="no-filter" name="filter" class="filter" >
+                                    {{ "no.special.filter"|trans }}
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label for="only-colleagues">
+                                    <input type="radio" {% if pa.getFilter() == 1 %}checked=""{% endif %} value="1" id="only-colleagues" name="filter" class="filter">
+                                    {{ "show.only.resource.own.projects"|trans }}
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label for="selected-projects">
+                                    <input type="radio" {% if pa.getFilter() == 2 %}checked=""{% endif %} value="2" id="selected-projects" name="filter" class="filter">
+                                    {{ "show.only.resource.selected.projects"|trans }}
+                                </label>
+                            </div>
+
+                            <div class="control-group" id="project-list">
+                                <label for="teams" class="control-label">{{ "projects"|trans }}</label>
+                                <div class="controls">
+                                    <select id="projects" name="projects[]" multiple="multiple" class="form-control">
+                                        {% for p in allProjects %}
+                                            <option value="{{ p.id }}" {% if p in pa.getProjects() %}selected="selected"{% endif %} style="color:{{p.color}};">{{ p }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary pull-left" value="{{ "validate"|trans }}">
+                        <input type="reset" class="btn" data-dismiss="modal" value="{{ "cancel"|trans }}">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/js/stickyheader.jquery.js'
+        'bundles/actresource/js/previsional.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

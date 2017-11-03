@@ -1,0 +1,14 @@
+{% if simulation and simulation.user == app.user %}
+    <div class="alert alert-info alert-simulation">
+        <h4 class="alert-heading pull-left" style="margin-right:25px">{{ "simulation.running"|trans }}</h4>
+        <a class="btn btn-success btn-mini" href="{{ path('act_resource_commit_simulation', {'referer': app.request.uri}) }}">{{ "validate.modifications"|trans }}</a>
+        <a class="btn btn-danger btn-mini" href="{{ path('act_resource_rollback_simulation', {'referer': app.request.uri}) }}">{{ "cancel.modifications"|trans }}</a>
+    </div>
+{% elseif simulation %}
+    <div class="alert alert-warning alert-simulation">
+        <h4 class="alert-heading">{{ "warning"|trans }}!</h4>
+        {{ "simulation.thrown"|trans({'%date%' : simulation.start|date('d/m/Y - h:i:s'), '%user%' : simulation.user}) }}<br/>
+        {{ "simulation.instruction.first"|trans }}<br/>
+        {{ "simulation.instruction.second"|trans }}
+    </div>
+{% endif %}

@@ -1,0 +1,259 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ "summary.year"|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block body_attributes %}id="year-summary"{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+        'libs/jquery-ui/jquery-ui.min.css'
+        'libs/jquery-ui/jquery-ui.structure.min.css'
+        'libs/jquery-ui/jquery-ui.theme.min.css'
+        'bundles/actresource/css/project_show.css'
+        'bundles/actresource/css/year_summary.css'
+     %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body_title_right %}
+    <a class="btn btn-primary" data-toggle="modal" href="#chooseDates"><i class="glyphicon glyphicon-zoom-in"></i> {{ "display.define"|trans }}</a>
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "summary.year"|trans }}
+    <i class="glyphicon glyphicon-question-sign help-popover" data-content="{{ "summary.year.help"|trans }}"></i>
+{% endblock %}
+
+{% block body_content %}
+<table class="planning-table">
+    {% for i in 0..summary.totalWeeks+1 %}
+        <colgroup></colgroup>
+    {% endfor %}
+
+    <thead>
+        <tr class="year-row">
+            <td colspan="2">{{ "year"|trans }}</td>
+            {% for year, data in summary.years %}
+                <td colspan="{{ data.nb }}">{{ year }}</td>
+            {% endfor %}
+        </tr>
+
+        <tr class="month-row">
+            <td colspan="2">{{ "month"|trans }}</td>
+            {% for year, months in summary.months %}
+                {% for month, data in months %}
+                    <td colspan="{{ data.nb }}">{{ month }}</td>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+
+        <tr class="week-row">
+            <td colspan="2" class="week">{{ "week"|trans }}</td>
+            {% for year, weeks in summary.weeks %}
+                {% for week, data in weeks %}
+                    <td class="week {% if data.current is defined %}current-week{% endif %}">W{{ week }}</td>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for teamData in summary.data %}
+        {% set team = teamData.team %}
+        {% set resources = teamData.resources %}
+
+        {% set parentLoopLast = false %}
+        {% if loop.last %}
+            {% set parentLoopLast = true %}
+        {% endif %}
+
+        {% for resourceData in resources %}
+            {% set resource = resourceData.resource %}
+            {% set weeks = resourceData.weeks %}
+
+            <tr>
+                {% if loop.first %}
+                <td rowspan="{{ resources|length }}" style="background-color:{{team.color}};">{{ team }}</td>
+                {% endif %}
+
+                <td style="background-color: rgba({{ team.color|rgbColor }}, {% if loop.index is even %}0.5{% else %}1{% endif %});"
+                    class="left-col"
+                    title="{{ resource.name }}"
+                    data-content="{{ "working.days.per.week"|trans }} : {{ resource.daysperweek }}<br/>{{ "date.start"|trans }} : {{ resource.start|date('d/m/Y') }} {% if resource.end %}<br/>{{ "date.end"|trans }} : {{ resource.end|date('d/m/Y') }} {% endif %}<br/>{{ "location"|trans }} : {{ resource.location }}"
+                    >
+                    {{ resource.nameshort }}
+                </td>
+
+                {% for data in weeks %}
+                    {% if data.available %}
+                        <td class="clickable {{ data.classes|join(' ') }}" title="{{ resource.nameshort }} - W{{ data.week }} {{ data.year }} - {{ "loaded.percentage"|trans({'%percentage%': data.load}) }}">
+
+                                  <span class="hidden percentage">{{ data.load }}</span>
+                                  <span class="hidden day">{{ data.start|date('d/m/Y') }}</span>
+                                  <span class="hidden resource">{{ resource.nameshort }}</span>
+
+
+                            {{ data.workload }}
+                        </td>
+
+                    {% else %}
+                        <td class="disabled" title="{{ "unavailable"|trans }}"></td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+
+            {% if loop.last and parentLoopLast == false %}
+                {% if loop.length > 0 %}
+                    <tr style="height:20px;"></tr>
+                    <tr class="week-recap">
+                        <td colspan="2" class="week">{{ "week"|trans }}</td>
+                        {% for data in weeks %}
+                                <td class="week {% if data.current %}current-week{% endif %}">W{{ data.week }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="modal fade" id="chooseDates">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="choose-dates" method="post" action="{{ path('act_resource_year_summary') }}" class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3>{{ "display.definition"|trans }}</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="start" class="col-sm-3 control-label">{{ "starting.from"|trans }}</label>
+                        <div class="col-sm-5">
+                            <input id="start" class="form-control" name="start" type="text" required="required" value="{% if summary.startDate is defined %}{{ summary.startDate|date('d/m/Y') }}{% else %}{{ "now"|date('d/m/Y') }}{% endif %}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="monthsbefore" class="col-sm-3 control-label">{{ "with"|trans }}</label>
+                        <div class="col-sm-5">
+                            <input id="monthsbefore" class="form-control" name="monthsbefore" type="text" required="required" value="{{ summary.monthsbefore }}">
+                            <p class="help-block">{{ "months.before.this.date"|trans }}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="monthsafter" class="col-sm-3 control-label">{{ "and"|trans }}</label>
+                        <div class="col-sm-5">
+                            <input id="monthsafter" class="form-control" name="monthsafter" type="text" required="required" value="{{ summary.monthsafter }}">
+                            <p class="help-block">{{ "months.after.this.date"|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary pull-left" value="{{ "validate"|trans }}">
+                    <input type="reset" class="btn" data-dismiss="modal" value="{{ "cancel"|trans }}">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.min.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+<script>
+$(function() {
+    // Highligh column and row functionnality
+    $("table tbody").delegate('td','mouseover mouseout', function(e) {
+        var isFirstChild = 1;
+        if($(this).parent().is(':first-child') || $(this).parent().prev('tr').hasClass('week-recap')) {
+            isFirstChild = 0;
+        }
+
+        if($(this).index() > 0 && !$(this).hasClass('left-col')) {
+            if (e.type == 'mouseover') {
+                $(this).parent().addClass("hover");
+                $("colgroup").eq($(this).index()+isFirstChild).addClass("hover");
+            }
+            else {
+                $(this).parent().removeClass("hover");
+                $("colgroup").eq($(this).index()+isFirstChild).removeClass("hover");
+            }
+        }
+    });
+
+    $('td.left-col').popover({ trigger: 'hover', html : true, container : 'body'});
+    enableClickable();
+
+    $("#start").datepicker({
+        dateFormat: 'dd/mm/yy',
+        firstDay:1,
+        beforeShowDay: $.datepicker.noWeekends,
+        selectWeek:true
+    });
+
+    $(document).keypress(function(e){
+        code = (e.keyCode ? e.keyCode : e.which);
+        // Touche Escape
+        if (code == 27){
+            $('.affect-popover').removeClass('affect-popover').popover('hide');
+            e.preventDefault();
+        }
+    });
+});
+
+function enableClickable()
+{
+    $('td.clickable').on('click', function(){
+        if(!$(this).hasClass('affect-popover')) {
+            $('td.affect-popover').removeClass('affect-popover').popover('hide');
+
+            // On créé la fenêtre popover
+            $(this).addClass('affect-popover').popover({
+                html: true,
+                placement: 'bottom',
+                trigger: 'manual',
+                content: '<div id="infos-container">'+getLoadingBar()+'</div>',
+                container: 'body',
+            });
+
+            // On charge les infos en AJAX
+            loadInfos($(this));
+
+            // On affiche la fenêtre
+            $(this).popover('show');
+            $('<button class="close" title="{{ "close"|trans }}" type="button">×</button>').click(function(){
+                $('.affect-popover').removeClass('affect-popover').popover('hide');
+            }).appendTo($('.popover').find('.popover-title'));
+        }
+    });
+}
+
+function loadInfos(elem)
+{
+    var day = $(elem).find('span.day').html();
+    var resource = $(elem).find('span.resource').html();
+
+    $.ajax({
+        type: "POST",
+        url: Routing.generate('act_resource_resource_get_infos_simple'),
+        data: {
+            day: day,
+            resource_short: resource
+        },
+        success: function(data){
+            $('.popover').find('#infos-container').html(generateRecapTable(resource, data));
+        }
+    });
+}
+
+</script>
+{% endblock %}

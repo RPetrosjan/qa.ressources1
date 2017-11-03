@@ -1,0 +1,25 @@
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ "projects"|trans }} <b class="caret"></b></a>
+    <ul class="dropdown-menu" id="project-menu">
+        <li><a href="{{ path('admin_act_resource_project_list', {'_locale': trueLocale}) }}">{{ "projects.list"|trans }}</a></li>
+        <li class="divider"></li>
+
+        {% if pprojects|length > 0 %}
+            <li class="dropdown-header">{{ "projects.prefered"|trans }}</li>
+            {% for pproject in pprojects %}
+                <li class="project-{{ pproject.project.id }} prefered-project"><a href="{{ path('act_resource_project_show', {'id' : pproject.project.id, '_locale': trueLocale }) }}">{{ pproject.project.name }}</a></li>
+            {% endfor %}
+            <li id="prefered-projects-divider" class="divider"></li>
+        {% endif %}
+
+            <li class="dropdown-header search-projects-dropdown-header"><i class="glyphicon glyphicon-search"></i> {{ "project.search"|trans }}</li>
+
+            <li id="project-typeahead-li">
+                <input class="form-control" type="text" id="project-typeahead" placeholder="{{ "project.name"|trans }}">
+                <span id="project-typeahead-loading">
+                    <img src="{{ asset('bundles/actresource/img/loading.gif') }}" />
+                </span>
+            </li>
+            <div id="projectlist" style="max-height:200px;overflow:auto"></div>
+    </ul>
+</li>

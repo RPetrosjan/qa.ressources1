@@ -1,0 +1,18 @@
+<table class="tasks">
+    {% set rows = planning.project.getTasksAsRows(planning.start, planning.end, planning.team) %}
+    {% set noteamrows = planning.project.getTasksAsRows(planning.start, planning.end, null) %}
+
+    {# Affichage des tâches #}
+    {% if rows|length > 0 %}
+        {% for row in rows %}
+            {% include 'ActResourceBundle:Project:teamTasks.html.twig' %}
+        {% endfor %}
+    {% endif %}
+
+    {# Affichage des tâches sans équipe #}
+    {% if noteamrows|length > 0 %}
+        {% for row in noteamrows %}
+            {% include 'ActResourceBundle:Project:teamTasks.html.twig' %}
+        {% endfor %}
+    {% endif %}
+</table>

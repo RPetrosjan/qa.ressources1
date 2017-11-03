@@ -1,0 +1,244 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ "resources.usage"|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "resources.usage"|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        #chart {
+            margin-bottom: 20px;
+        }
+
+        #resource-usage-table-wrapper {
+            overflow-x: auto;
+        }
+
+        #resource-usage-table {
+            text-align: center;
+        }
+
+        #export-form {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        #export-form button {
+            width: 100%;
+        }
+
+        tr.team-row td,
+        tr.total-row td {
+            background: inherit !important;
+            font-weight: bold;
+        }
+
+        tr.team-row td.team-name,
+        tr.resource-row td.resource-name,
+        tr.total-row td.total-name {
+            text-align: left;
+        }
+    </style>
+{% endblock %}
+
+{% block body_content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <form id="export-form" method="POST" action="{{ path('act_resource_resource_show') }}">
+                    <input type="hidden" name="start" value="{{ start }}" />
+                    <input type="hidden" name="end" value="{{ end }}" />
+                    {% for resource in resources %}<input type="hidden" value="{{ resource }}" name="resources[]" />{% endfor %}
+                    {% for project in projects %}<input type="hidden" name="projects[]" value="{{ project.id }}" />{% endfor %}
+                    {% for tag in tags %}<input type="hidden" name="tags[]" value="{{ tag }}" />{% endfor %}
+                    <button type="submit" name="export-excel" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i> {{ "resource.usage.export.excel"|trans }}</button>
+                </form>
+
+                <div class="panel panel-default dashboard-project-types">
+                    <div class="panel-heading">
+                        {{ 'project.types.included'|trans }}
+                    </div>
+
+                    <ul class="list-group">
+                        {% if tags|length > 0 %}
+                            {% for tag in tags %}
+                                <li class="list-group-item">{{ tag|trans }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">{{ "project.types.all"|trans }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="panel panel-default dashboard-projects">
+                    <div class="panel-heading">
+                        {{ 'projects.included'|trans }}
+                    </div>
+
+                    <ul class="list-group">
+                        {% if projects|length > 0 %}
+                            {% for project in projects %}
+                                <li class="list-group-item">{{ project.name }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">{{ "projects.all"|trans }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-10">
+                <div id="chart"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12" id="resource-usage-table-wrapper">
+                <table class="table table-condensed table-striped table-bordered" id="resource-usage-table">
+                    <tbody>
+                    {% for team in reponse.team %}
+                        <tr class="team-row" style="background-color: rgba({{ team.color }},0.6) !important;">
+                            <td class="team-name">{{ team.name }}</td>
+                            {% for week, value in reponse.team|first.charge %}
+                                <td>W{{ week[:2] }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        {% for res in team.resources %}
+                            <tr class="resource-row">
+                                <td class="resource-name">{{ res.name }}</td>
+                                {% for week, charge in res.weeks %}
+                                    <td title="{{ charge.affectedTime }} / {{ charge.availableTime }}">
+                                        {% if charge.availableTime != 0 %}
+                                            {{ ((charge.affectedTime / charge.availableTime) * 100)|round(2, 'common') }} %
+                                        {% else %}
+                                            <span title="{{ "unavailable"|trans }}">-</span>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+
+                        <tr class="total-row" style="background-color: rgba({{ team.color }},0.1) !important;">
+                            <td class="total-name">Total</td>
+                            {% for charge in team.charge %}
+                                <td title="{{ charge.affectedTime }} / {{ charge.availableTime }}">
+                                    {% if charge.availableTime != 0 %}
+                                        {{ ((charge.affectedTime / charge.availableTime) * 100)|round(2, 'common') }} %
+                                    {% else %}
+                                        <span title="{{ "unavailable"|trans }}">-</span>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                        <tr class="total-row">
+                            <td>{{ "total.general"|trans }}</td>
+                            {% for charge in reponse.charge %}
+                                <td title="{{ charge.affectedTime }} / {{ charge.availableTime }}">
+                                    {% if charge.availableTime != 0 %}
+                                        {{ ((charge.affectedTime / charge.availableTime) * 100)|round(2, 'common') }} %
+                                    {% else %}
+                                        <span title="{{ "unavailable"|trans }}">-</span>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/js/highcharts.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        $(function () {
+            $('.dashboard-project-types').each(function() {
+                var parent = $(this);
+                $(this).find('.close').click(function() {
+                    $(parent).closest('.row').find('.col-md-10').removeClass('col-md-10').addClass('col-md-12');
+                    $(parent).parent('.col-md-2').remove();
+                    $(window).resize();
+                });
+            });
+
+            $('#chart').highcharts({
+                title: {
+                    text: "{{'resources.charge.rate'|trans }}",
+                    x: -20 //center
+                },
+
+                xAxis: {
+                    categories: [{% for week, value in reponse.team|first.charge %}
+                        'W {{ week[:2] }}',
+                        {% endfor %}]
+
+                },
+                yAxis: {
+                    title: {
+                        text: "Taux d'occupation"
+                    },
+
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                tooltip: {
+                    valueSuffix: ' %'
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: [
+                    {% for team in reponse.team %}
+                    {
+                        name : '{{ team.name }}',
+                        color : 'rgb({{ team.color }})',
+                        data : [
+                            {% for charge in team.charge %}
+                                {% if charge.availableTime != 0 %}
+                                    {{ ((charge.affectedTime / charge.availableTime) * 100)|round(2, 'common') }},
+                                {% else %}
+                                    0,
+                                {% endif %}
+                            {% endfor %}
+                        ]
+                    },
+                    {% endfor %}
+                    {
+                        name : 'Total',
+                        color : 'rgb(0, 0, 0)',
+                        data : [
+                            {% for charge in reponse.charge %}
+                            {% if charge.availableTime != 0 %}
+                            {{ ((charge.affectedTime / charge.availableTime) * 100)|round(2, 'common') }},
+                            {% else %}
+                            0,
+                            {% endif %}
+                            {% endfor %}
+                        ]
+                    },
+                ]
+            });
+        });
+    </script>
+{% endblock %}

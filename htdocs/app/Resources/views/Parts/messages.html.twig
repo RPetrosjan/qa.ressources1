@@ -1,0 +1,22 @@
+<div id="page-alerts">
+    {% for type, flashMessages in app.session.flashbag.all() %}
+        {% for flashMessage in flashMessages %}
+            {% if type == 'error' %}{% set type = 'danger' %}{% endif %}
+            <div class="alert alert-{{ type }} shadow-radial">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                    <span class="alert-heading">
+                        {% if type == "success" %}
+                            <i class="glyphicon glyphicon-ok"></i> {{ "alert.success"|trans }} :
+                        {% elseif type == "danger" %}
+                            <i class="glyphicon glyphicon-exclamation-sign"></i> {{ "alert.error"|trans }} :
+                        {% elseif type == "info" %}
+                            <i class="glyphicon glyphicon-info-sign"></i> {{ "alert.info"|trans }} :
+                        {% elseif type == "warning" %}
+                            <i class="glyphicon glyphicon-warning-sign"></i> {{ "alert.warning"|trans }} :
+                        {% endif %}
+                    </span>
+                {{ flashMessage|raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>

@@ -1,0 +1,13 @@
+{% extends 'SonataAdminBundle:CRUD:base_list.html.twig' %}
+
+{% block actions %}
+    <li>
+        {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
+    </li>
+
+    <li>
+        <a class="sonata-action-element" href="{{ path('admin_act_resource_bankholiday_import') }}">
+            <i class="glyphicon glyphicon-import"></i> {{ "to.import"|trans }}
+        </a>
+    </li>
+{% endblock %}

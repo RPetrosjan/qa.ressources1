@@ -1,0 +1,20 @@
+act_resource_project_planning_show:
+    pattern: /{id}/planning/
+    defaults: { _controller: "ActResourceBundle:Planning:show" }
+    requirements: { id:  \d+ }
+    options:
+        expose: true
+
+act_resource_project_planning_get_ajax:
+    pattern: /{id}/planning/load/{team}
+    defaults: { _controller: "ActResourceBundle:Planning:getPlanning" }
+    requirements: { id:  \d+, team:  \d+ }
+    options:
+        expose: true
+
+act_resource_project_planning_save:
+    pattern: /{id}/planning/save
+    defaults: { _controller: "ActResourceBundle:Planning:save" }
+    requirements: { id:  \d+ }
+    options:
+        expose: true

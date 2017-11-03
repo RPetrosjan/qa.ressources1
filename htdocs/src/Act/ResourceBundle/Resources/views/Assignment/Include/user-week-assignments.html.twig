@@ -1,0 +1,70 @@
+<table id="assignments" class="table table-bordered table-condensed table-striped">
+    <thead>
+    <tr>
+        <th class="header-week-label" rowspan="2">
+            {{ "week"|trans }} {{ planning.start|date('W') }}
+        </th>
+
+        {% for day in planning.getPeriod() %}
+            <th {% if day|date('d/m/Y') == "now"|date('d/m/Y') %}class="today"{% endif %}>
+                {{ day|localeDate('medium','none',null,'EEEE')  }}
+            </th>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for day in planning.getPeriod() %}
+            <th {% if day|date('d/m/Y') == "now"|date('d/m/Y') %}class="today"{% endif %}>
+                {{ day|date('d/m') }}
+            </th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for projectData in planning.getProjects() %}
+        {% set project = projectData.project %}
+        <tr>
+            <td class="body-project-label" style="background-color:rgba({{ project.color|rgbColor }}, 0.5) !important;">
+                <a href="{{ path('act_resource_project_show', {'id' : project.id }) }}" title="{{ project.name }}">{{ project.name }}</a>
+            </td>
+            {% for dayData in projectData.days %}
+                {% set day = dayData.date %}
+
+                {% if dayData.bankholidays is defined %}
+                    <td class="bankholiday">
+                        {% for bankholiday in dayData.bankholidays %}
+                            {{ bankholiday.name }}
+                        {% endfor %}
+                    </td>
+                {% else %}
+                    <td style="text-align:center;{% if dayData.assignment is defined %}background-color:rgba({{ project.color|rgbColor }}, 0.5) !important;{% endif %}">
+                        {% if dayData.assignment is defined %}
+                            <div class="planning-workload">{{ dayData.assignment.getWorkload()|workloadFormat }}</div>
+
+                            {% if dayData.assignment.commontask %}
+                                <div class="planning-metatask">{{ dayData.assignment.commontask.metatask }}</div>
+                                <div class="planning-task">{{ dayData.assignment.commontask }}</div>
+                            {% endif %}
+
+                            {% if dayData.assignment.subtask %}
+                                <div class="planning-subtask">{{ dayData.assignment.subtask.name }}</div>
+                            {% endif %}
+
+                            {% if dayData.assignment.comment %}
+                                <div class="planning-comment">&laquo; {{ dayData.assignment.comment|nl2br }} &raquo;</div>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+
+    {% if planning.getProjects()|length == 0 %}
+        <tr>
+            <td class="no-assignments" colspan="6">
+                {{ "no.assignments"|trans }}
+            </td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>

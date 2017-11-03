@@ -1,0 +1,9 @@
+ldap:
+    connect.failed: La connexion au server LDAP a échouée
+    bind.failed: L'authentification au server LDAP a échouée
+
+user:
+    account:
+        locked: Ce compte utilisateur est verrouillé, veuillez contacter un administrateur
+        disabled: Ce compte utilisateur est désactivé ou en attente d'activation
+        expired: Ce compte utilisateur est expiré

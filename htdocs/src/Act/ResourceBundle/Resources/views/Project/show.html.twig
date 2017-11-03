@@ -1,0 +1,193 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ "schedule"|trans }} : {{ project }} - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+        'libs/jquery-ui/jquery-ui.min.css'
+        'libs/jquery-ui/jquery-ui.structure.min.css'
+        'libs/jquery-ui/jquery-ui.theme.min.css'
+        'bundles/actresource/css/project_show.css'
+     %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body_attributes %}id="show-project-page"{% endblock%}
+
+{% block body_title_right %}
+    <div class="btn-group">
+        <a class="btn btn-primary" data-toggle="modal" href="#chooseDates"><i class="glyphicon glyphicon-zoom-in"></i> {{ "display.define"|trans }}</a>
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+
+        {% include 'ActResourceBundle:Project:links_dropdown.html.twig' with {'project': project} %}
+    </div>
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "schedule"|trans }} : {{ project }}
+    <i id="prefered-project-star" class="glyphicon {% if isPrefered %}glyphicon-star{% else %}glyphicon-star-empty{% endif %}" title="{{ "prefered.project.add.or.remove"|trans }}"></i>
+{% endblock %}
+
+{% block body_content %}
+    <div id="planning">
+        {% for planning in manager.getPlannings() %}
+        <div class="planning displayed-team" id="team-{{ planning.team.id }}" style="background-color: rgba({{ planning.team.color|rgbColor }}, 0.1);">
+            {% include 'ActResourceBundle:Project:onlyheader.html.twig' with {'planning': planning, 'type': 'team', 'ajax': false} %}
+
+            <div id="planning-{{planning.team.id}}" class="planning-table-container planning-content">
+                {% include 'ActResourceBundle:Project:onlyplanning.html.twig' with {'manager': manager, 'planning': planning} %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% for planning in manager.getUnloadedTeamsPlannings() %}
+            <div id="team-{{ planning.team.id }}" class="planning" style="background-color: rgba({{ planning.team.color|rgbColor }}, 0.1);">
+                {% include 'ActResourceBundle:Project:onlyheader.html.twig' with {'planning': planning, 'type': 'team', 'ajax': true} %}
+
+                <div id="planning-{{planning.team.id}}" class="planning-table-container planning-content" style="display:none;">
+                    {% include 'ActResourceBundle:Project:onlyplanning.html.twig' with {'manager': manager, 'planning': planning} %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    {% if is_granted('ROLE_RP') %}
+        <div class="modal fade" id="replaceResource">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form name="replace-resource" method="post" action="{{ path('act_resource_project_resource_replace', {'id': project.id}) }}" class="form-horizontal" style="margin-bottom:0 !important;">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h3>{{ "resource.replacement"|trans }}</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="from" class="col-sm-2 control-label">{{ "replace"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <select id="from" name="from" required="required" class="form-control">
+                                        <option value="" selected="selected">{{ "choose.the.replaced"|trans }}</option>
+                                        {% for resource in resources %}
+                                            <option value="{{ resource.id }}" style="color:{{ resource.team.color }};">{{ resource }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="to" class="col-sm-2 control-label">{{ "by"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <select id="to" name="to" required="required" class="form-control">
+                                        <option value="" selected="selected">{{ "choose.the.replacing"|trans }}</option>
+                                        {% for resource in resources %}
+                                            <option value="{{ resource.id }}" style="color:{{ resource.team.color }};">{{ resource }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary pull-left" value="{{ "validate"|trans }}">
+                            <input type="reset" class="btn btn-default" data-dismiss="modal" value="{{ "cancel"|trans }}">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="shiftProject">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form name="replace-resource" method="post" action="{{ path('act_resource_project_shift', {'id': project.id}) }}" class="form-horizontal" style="margin-bottom:0 !important;">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h3>{{ "project.shifting"|trans }}</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="days" class="col-sm-5 control-label">{{ "shif.project.of"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <input id="days" name="days" type="text" class="form-control" required="required" placeholder="{{ "days.open"|trans }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="timeDirection" class="col-sm-5 control-label">{{ "in"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" checked="" value="1" id="timeDirection" name="timeDirection">
+                                            {{ "the.future"|trans }}
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio"  value="0" id="timeDirection" name="timeDirection">
+                                            {{ "the.past"|trans }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="project-shift" class="col-sm-5 control-label">{{ "project.shift"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" value="0" id="project-shift" name="project-shift">
+                                            {{ "tasks"|trans }}
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio"  value="1" id="project-shift" name="project-shift">
+                                            {{ "assignments"|trans }}
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" checked="checked" value="2" id="project-shift" name="project-shift">
+                                            {{ "both"|trans }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary pull-left" value="{{ "validate"|trans }}">
+                            <input type="reset" class="btn btn-default" data-dismiss="modal" value="{{ "cancel"|trans }}">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% include 'ActResourceBundle:Project:define_display_modal.html.twig' with {'manager': manager, 'project': project, 'path': path('act_resource_project_show', {'id': project.id}), 'route': 'act_resource_project_show' } %}
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.js'
+        'libs/js/stickyheader.jquery.js'
+        'bundles/actresource/js/project_show.js'
+        'bundles/actresource/js/project.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        var project_id = {{ project.id }};
+        var hide = {% if manager.getHide() %}1{% else %}0{% endif %};
+        var start = '{{ manager.getStart()|date('d/m/Y') }}';
+        var end = '{{ manager.getEnd()|date('d/m/Y') }}';
+        var isCPT = {% if manager.isCPTOfProject() %}true{% else %}false{% endif %};
+        var loadingImgSrc = '{{ asset('bundles/actresource/img/assignment_loading.gif') }}';
+
+    </script>
+{% endblock %}

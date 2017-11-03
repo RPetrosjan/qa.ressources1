@@ -1,0 +1,76 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ "dashboard"|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('/libs/select2/select2.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('/libs/select2/select2-bootstrap.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block body_attributes %}id="home-page"{% endblock %}
+
+{% block body_title %}
+    <div id="page-title" class="container-fluid">
+        <div id="page-title-inner" class="row">
+            <div class="col-md-7 body-title-text clearfix">
+                <h1>{{ "welcome"|trans }}, <span class="user">{{ app.user }}</span></h1>
+                <p>{{ "account.linked_to_resource"|trans({'%resource%': app.user.resource})|raw }} (<span style="color:{{ app.user.resource.team.color }};">{{ app.user.resource.team }}</span>)</p>
+            </div>
+
+            <div class="col-md-5 body-title-right clearfix">
+                <h5>{{ 'control.dashboard.display'|trans }}</h5>
+                <div class="btn-group navigation-buttons">
+                    <a class="btn btn-default previous-btn" title="{{ "week.previous"|trans }}"><i class="glyphicon glyphicon-arrow-left"></i></a>
+                    <a class="btn btn-default reset-btn" title="{{ "week.current"|trans }}"><i class="glyphicon glyphicon-map-marker"></i></a>
+                    <a class="btn btn-default next-btn" title="{{ "week.next"|trans }}"><i class="glyphicon glyphicon-arrow-right"></i></a>
+                </div>
+
+                <select class="resources-select">
+                    {% for data in teams %}
+                        <optgroup label="{{ data.team.getName() }}">
+                            {% for resource in data.resources %}
+                                <option value="{{ resource.getId() }}" {% if app.user.resource.id == resource.getId() %}selected="selected"{% endif %}>{{ resource.getName() }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
+                </select>
+
+                <a class="btn btn-default reset-all-btn" title="{{ "reset"|trans }}"><i class="glyphicon glyphicon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+    <hr id="page-hr">
+{% endblock %}
+
+{% block body_content %}
+    <div id="homepage-wrapper">
+        <h3 id="user-week-title">{{ 'assignments'|trans }} : {{ app.user.resource.name }}</h3>
+        <div id="user-week-assignments">
+            {% include 'ActResourceBundle:Assignment:Include/user-week-assignments.html.twig' with {'planning': planning} %}
+        </div>
+
+        <h3>{{ 'other.projects'|trans }}</h3>
+        <div id="project-week-assignments">
+            {% include 'ActResourceBundle:Assignment:Include/project-week-assignments.html.twig' with {'projects': projects} %}
+        </div>
+    </div>
+
+    <div id="homepage-loader">
+        <div class="loading-bar"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var default_resource = {{ app.user.resource.id }};
+    </script>
+    {% javascripts
+        'libs/select2/select2.min.js'
+        'libs/select2/select2.js'
+        'bundles/actresource/js/homepage.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends admin.getTemplate('base_list_field') %}
+
+{% set first_action = field_description.options.actions|first %}
+
+{% block field %}
+    <div class="btn-group">
+        {% include first_action.template with {'first': true}  %}
+        {% if field_description.options.actions|length > 1 %}
+            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                {% for actions in field_description.options.actions %}
+                    {% if loop.first == false %}
+                        <li>{% include actions.template with {'first': false} %}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}

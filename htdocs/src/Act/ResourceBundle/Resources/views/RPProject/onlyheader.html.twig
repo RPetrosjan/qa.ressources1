@@ -1,0 +1,18 @@
+<header class="row-fluid clearfix">
+    <div style="{% if type == 'team' %}color:{{planning.team.color}};{% else %}color:{{planning.project.color}};{% endif %}" class="span4">
+        <div class="row">
+            <div class="col-md-1">
+                <span class="btn btn-default planning-show-btn{% if ajax %} unloaded{% endif %} glyphicon {% if ajax %}glyphicon-chevron-down{% else %}glyphicon-chevron-up{% endif %}">
+                </span>
+            </div>
+
+            <div class="col-md-9 planning-title">
+                {% if type == 'team' %}{{ planning.team }}{% else %}{{ planning.project }}{% endif %}
+            </div>
+
+            <div class="col-md-2">
+                <a class="save-planning-button btn btn-warning" disabled="disabled">Sauvegarder</a>
+            </div>
+        </div>
+    </div>
+</header>

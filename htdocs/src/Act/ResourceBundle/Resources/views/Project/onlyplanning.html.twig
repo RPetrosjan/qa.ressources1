@@ -1,0 +1,301 @@
+{% if planning.team is defined and planning.team != null %}
+<div class="planning-table-container">
+    <div class="hidden planning-data">
+        <span class="planning-data-project-id">{{ planning.project.id }}</span>
+        <span class="planning-data-team-id">{{ planning.team.id }}</span>
+    </div>
+
+    {% if planning.start is defined and planning.start != null and planning.end is defined and planning.end != null %}
+    <table class="planning-table-sticky">
+        <thead>
+            <tr>
+                <th>{{ "month"|trans }}</th>
+            </tr>
+
+            <tr>
+                <th class="week">{{ "week"|trans }}</th>
+            </tr>
+
+            <tr>
+                <th>{{ "day"|trans }}</th>
+            </tr>
+        </thead>
+
+        <tfoot>
+            <tr>
+                <td class="unsold">{{ "time.unsold"|trans }}</td>
+            </tr>
+
+            {% set rows = planning.project.getTasksAsRows(planning.start, planning.end, planning.team) %}
+            {% set totalShown = planning.project.getTotalTasksShown(planning.start, planning.end, planning.team) %}
+            {% set totalToBeShown = planning.getNbTasks() %}
+
+            {% if rows|length > 0 %}
+                <tr class="tasks">
+                    <td style="background-color: rgb({{ planning.team.color|rgbColor }});">
+                        <span class="hide-overflow">
+                            {% if totalShown < totalToBeShown %}
+                                <span class="error"><b>ERREUR<br/>Il manque des tâches</b></span>
+                            {% elseif totalShown > totalToBeShown %}
+                                <span class="error"><b>ERREUR<br/>Il y a trop de tâches</b></span>
+                            {% else %}
+                                {{ "tasks"|trans }} {% if is_granted('ROLE_RP') %}({{totalShown}}/{{totalToBeShown}}){% endif %}
+                            {% endif %}
+                        </span>
+                        <span class="task-row-nb">{{ rows|length }}</span>
+                    </td>
+                </tr>
+            {% endif %}
+
+            {% set noteamrows = planning.project.getTasksAsRows(planning.start, planning.end, null) %}
+            {% set totalShown = planning.project.getTotalTasksShown(planning.start, planning.end, null) %}
+            {% set totalToBeShown = planning.getNbTasksWithoutTeam() %}
+
+            {% if noteamrows|length > 0 %}
+                <tr class="tasks-no-team">
+                    <td>
+                        <span class="hide-overflow">
+                            {% if totalShown < totalToBeShown %}
+                                <span class="error"><b>ERREUR<br/>Il manque des tâches</b></span>
+                            {% elseif totalShown > totalToBeShown %}
+                                <span class="error"><b>ERREUR<br/>Il y a trop de tâches</b></span>
+                            {% else %}
+                                Sans équipe {% if is_granted('ROLE_RP') %}({{totalShown}}/{{totalToBeShown}}){% endif %}
+                            {% endif %}
+                        </span>
+                        <span class="task-row-nb">{{ noteamrows|length }}</span>
+                    </td>
+                </tr>
+            {% endif %}
+        </tfoot>
+
+        <tbody>
+        {% if planning.team.resources is defined %}
+            {% for resource in planning.team.resources %}
+                <tr>
+                    <td class="left-col {% if loop.index is even %}even{% endif %}" title="{{ resource.name }}" data-content="{{ "working.days.per.week"|trans }} : {{ resource.daysperweek }}<br/>{{ "date.start"|trans }} : {{ resource.start|date('d/m/Y') }} {% if resource.end %}<br/>{{ "date.end"|trans }} : {{ resource.end|date('d/m/Y') }} {% endif %}<br/> {{ "location"|trans }} : {{ resource.location }}">
+                        {{ resource.nameshort }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+    <table class="planning-table stickyHeader">
+        <thead>
+            <tr>
+                {% for year, v in planning.months %}
+                    {% for key, val in v %}
+                        <th colspan="{{ val.nb }}" class="month {% if val.current is defined %} current{% endif %}">
+                            <span class="td-hide-overflow">
+                                {{ key }} {{ year }}
+                            </span>
+                        </th>
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+
+            <tr>
+                {% for year, v in planning.weeks %}
+                    {% for key, val in v %}
+                        <th colspan="{{ val.nb }}" class="week {% if val.current is defined %} current{% endif %} {% if val.beforeCurrent is defined %} before-current{% endif %}">
+                            <span class="td-hide-overflow">
+                                W{% if key == '1' %}01{% else %}{{ key }}{% endif %}
+                            </span>
+                        </th>
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+
+            <tr>
+                {% for key, val in planning.days %}
+                    <th class="day {% if val.currentWeek is defined %} current-week{% endif %} {% if val.firstOfWeek is defined %} first-of-week{% endif %} {% if val.lastOfWeek is defined %} last-of-week{% endif %} {% if val.beforeCurrent is defined %} before-current{% endif %}">
+                        {{ val['day']|date('d/m') }}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+
+        <tfoot class="tasks">
+            <tr>
+                {% set tkey = 'unsold-team-' ~ planning.team.id %}
+                {% for key, val in planning.days %}
+                    <td id="planning-{{ planning.team.id }}-{{ planning.project.id }}-unsold-{{ val.day|date('d-m-Y') }}" class="unsold {% if val.currentWeek is defined %} current-week {% endif %} {% if val.firstOfWeek is defined %} first-of-week{% endif %} {% if val.lastOfWeek is defined %} last-of-week{% endif %}" title="{{ key }}">
+                        {% if val.unsold is defined %}
+                            {{ val.unsold }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+
+            {# Affichage des tâches #}
+            {% if rows|length > 0 %}
+                {% for row in rows %}
+                    {% include 'ActResourceBundle:Project:teamTasks.html.twig' %}
+                {% endfor %}
+            {% endif %}
+
+            {# Affichage des tâches sans équipe #}
+            {% if noteamrows|length > 0 %}
+                {% for row in noteamrows %}
+                    {% include 'ActResourceBundle:Project:teamTasks.html.twig' %}
+                {% endfor %}
+            {% endif %}
+        </tfoot>
+
+        <tbody>
+            {% for rshort, rdata in planning.data %}
+            <tr>
+                {% for dayLong, dayData in rdata.assignments %}
+                    {% set classes = '' %}
+                    {% set title = rshort ~ ' - ' ~ dayLong %}
+                    {% set workloadClass = '' %}
+
+                    {# Classes de placement du popover #}
+                    {% if loop.index < 5 %}
+                        {% set classes = classes ~ 'popover-right' %}
+                    {% elseif loop.index > (loop.length - 5) %}
+                        {% set classes = classes ~ 'popover-left' %}
+                    {% endif %}
+
+                    {# Ajout du type dans les classes #}
+                    {% if dayData.type is defined %}
+                        {% set classes = classes ~ ' ' ~ dayData.type %}
+                    {% endif %}
+
+                    {# Classes des jours de la semaine #}
+                    {% if dayData.day.currentWeek is defined %}
+                        {% set classes = classes ~ ' current-week' %}
+                    {% endif %}
+                    {% if dayData.day.firstOfWeek is defined %}
+                        {% set classes = classes ~ ' first-of-week' %}
+                    {% endif %}
+                    {% if dayData.day.lastOfWeek is defined %}
+                        {% set classes = classes ~ ' last-of-week' %}
+                    {% endif %}
+                    {% if dayData.day.beforeCurrent is defined %}
+                        {% set classes = classes ~ ' before-current' %}
+                    {% endif %}
+
+                    {# Ajout des classes liées aux tâches + titre + workload #}
+                    {% if dayData.assignment is defined and dayData.assignment is not null %}
+                        {# TACHE #}
+                        {% if dayData.assignment.commontask is defined and dayData.assignment.commontask is not null %}
+                            {% set classes = classes ~ ' task-assigned' %}
+                            {% set title = title ~ ' - ' ~ dayData.assignment.commontask ~ ' (' ~ dayData.assignment.commontask.workloadsold ~ 'md)' %}
+
+                            {# Ajout d'une classe pour les tâches du CPT #}
+                            {% if manager.canChangeSubtask(dayData.assignment) %}
+                                {% set classes = classes ~ ' cpt-team-task' %}
+
+                                {# Si présence d'une tâche mais pas d'une sous-tâche, et que le CPT peut le changer, on l'indique #}
+                                {% if is_granted('ROLE_RP') == false and dayData.assignment.subtask == null %}
+                                    {% set classes = classes ~ ' need-subtask' %}
+                                {% endif %}
+                            {% endif %}
+
+                            {# Ajout d'une classe pour les affectations hors de la tâche #}
+                            {% if dayData.assignment.isOutOfTaskDates() %}
+                                {% set classes = classes ~ ' out-of-task' %}
+                            {% endif %}
+
+                            {# SOUS-TACHE #}
+                            {% if dayData.assignment.subtask is defined and dayData.assignment.subtask is not null %}
+                                {% set classes = classes ~ ' subtask-assigned' %}
+                                {% set title = title ~ ' # ' ~ dayData.assignment.subtask ~ ' (' ~ dayData.assignment.subtask.workloadsold ~ 'md)' %}
+
+                                {# Ajout d'une classe pour les affectations hors de la sous-tâche #}
+                                {% if dayData.assignment.isOutOfSubtaskDates() %}
+                                    {% set classes = classes ~ ' out-of-subtask' %}
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% set classes = classes ~ ' no-task-assigned' %}
+                        {% endif %}
+
+
+                        {# HIGHLIGHT DES ERREURS #}
+                        {# Si le total du jour est supérieur à 1 on a de toute façon une erreur... #}
+                        {% set dayWorkload = planning.getDayWorkload(dayData.day.day, rdata.resource) %}
+                        {% if dayWorkload > 1 %}
+                            {% if dayWorkload > 1.99 %}
+                                {% set workloadClass = 'workload-critical' %}
+                            {% else %}
+                                {% set workloadClass = 'workload-high' %}
+                            {% endif %}
+
+                            {% set classes = classes ~ ' day-wk-error' %}
+                        {% else %}
+
+                            {# Sinon si le total de la semaine est supérieur au nombre de jour travaillé il y a erreur #}
+                            {# Attention : erreur sur les flottants possible ici ... on laisse donc une marge #}
+                            {% set weekWorkload = planning.getWeekWorkload(dayData.day.day, rdata.resource) %}
+                            {% if (rdata.resource.daysperweek - weekWorkload) < -0.00001 %}
+                                {% set diff = weekWorkload - rdata.resource.daysperweek %}
+                                {% if diff > 1.99 %}
+                                    {% set workloadClass = 'workload-critical' %}
+                                {% elseif diff > 0 %}
+                                    {% set workloadClass = 'workload-high' %}
+                                {% endif %}
+
+                                {% set classes = classes ~ ' week-wk-error' %}
+                            {% endif %}
+                        {% endif %}
+
+                        {# Tous les cas d'erreur on été couverts #}
+                        {% if workloadClass|length == 0 %}
+                            {% if dayWorkload > 0.74 %}
+                                {% set workloadClass = 'workload-ok' %}
+                            {% elseif dayWorkload > 0.49 %}
+                                {% set workloadClass = 'workload-low' %}
+                            {% else %}
+                                {% set workloadClass = 'workload-vlow' %}
+                            {% endif %}
+                        {% endif %}
+
+                        {% set classes = classes ~ ' background-' ~ workloadClass %}
+                    {% endif %}
+
+                    {# Changement du titre si indisponible #}
+                    {% if dayData.type is defined and dayData.type == 'disabled' %}
+                        {% set title = title ~ ' - ' ~ "unavailable"|trans %}
+
+                        {% if dayData.assignment is defined and dayData.assignment is not null %}
+                            {% set classes = classes ~ ' assignment' %}
+                        {% endif %}
+                    {% endif %}
+
+                    {# Changement du titre si jour férié #}
+                    {% if dayData.bankholiday is defined %}
+                        {% set title = title ~ ' - ' ~  dayData.bankholiday.name %}
+
+                        {% if dayData.assignment is defined and dayData.assignment is not null %}
+                            {% set classes = classes ~ ' assignment' %}
+                        {% endif %}
+                    {% endif %}
+
+
+                    <td class="{{ classes }}" title="{{ title }}">
+                        <div class="td-content-wrapper">
+                            <span class="assign-icon">
+                                <span class="assign-icon-help-text" title="{% if 'out-of-task' in classes %}{{ "assignment.out.of.task"|trans }}{% endif %}{% if 'out-of-subtask' in classes %}{{ ' - ' ~ "assignment.out.of.subtask"|trans }}{% endif %}"></span>
+                            </span>
+
+                            <span class="hidden day">{{ dayLong }}</span>
+                            <span class="hidden resource">{{ rshort }}</span>
+                            <span class="workload {{ workloadClass }}">{{ dayData.assignment.workload|default('') }}</span>
+                            <span class="hidden taskName">{{ dayData.assignment.commontask|default('') }}</span>
+                            <span class="hidden subtaskName">{{ dayData.assignment.subtask|default('') }}</span>
+                        </div>
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% else %}
+    <h4>{{ "project.no.resources"|trans }}</h4>
+{% endif %}

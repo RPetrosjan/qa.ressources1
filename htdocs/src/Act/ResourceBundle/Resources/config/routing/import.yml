@@ -1,0 +1,23 @@
+act_resource_absence_import:
+    pattern:  /absences
+    defaults: { _controller: "ActResourceBundle:Import:absences" }
+
+act_resource_bankholiday_import:
+    pattern:  /bankholidays
+    defaults: { _controller: "ActResourceBundle:Import:bankholidays" }
+
+act_resource_location_import:
+    pattern:  /locations
+    defaults: { _controller: "ActResourceBundle:Import:locations" }
+
+act_resource_resource_import:
+    pattern:  /resources
+    defaults: { _controller: "ActResourceBundle:Import:resources" }
+
+act_resource_team_import:
+    pattern:  /teams
+    defaults: { _controller: "ActResourceBundle:Import:teams" }
+
+act_resource_migrate_import:
+    pattern:  /migration/{onglet}/{projectName}
+    defaults: { _controller: "ActResourceBundle:Import:migrate" }

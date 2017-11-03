@@ -1,0 +1,8 @@
+services:
+    ldap.security.authentication.provider:
+        class:  Act\LdapBundle\Security\Authentication\Provider\LdapProvider
+        arguments: ["@event_dispatcher", 'userProvider', 'server', 'port', 'prefix', 'base', 'field']
+
+    ldap.security.authentication.listener:
+        class:  Act\LdapBundle\Security\Firewall\LdapListener
+        arguments: ["@security.context", "@security.authentication.manager", "@session", "@translator"]

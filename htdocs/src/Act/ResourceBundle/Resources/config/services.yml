@@ -1,0 +1,146 @@
+parameters:
+    act_resource.ldap_authenticator.class: Act\ResourceBundle\Services\Security\LdapAuthenticator
+    act_resource.ldap_user_manager.class: Act\ResourceBundle\Services\Security\LdapUserManager
+
+    # Nombre de jours par défaut avant la semaine courante
+    # -> Attention ce sont des jours normaux, pas des jours ouvrés, il faut donc compter les weekends.
+    act.planning.weeks_before:   1
+
+    # Nombre de jours par défaut après la semaine courante
+    # -> Attention ce sont des jours normaux, pas des jours ouvrés, il faut donc compter les weekends.
+    act.planning.weeks_after:    8
+
+    # Nombre de mois par défaut à afficher avant le mois choisi
+    act.recap.year.months_before:  3
+
+    # Nombre de mois par défaut à afficher après le mois choisi
+    act.recap.year.months_after:   3
+
+services:
+    act.cptRights:
+        class:      Act\ResourceBundle\Services\CPTRights
+        arguments:  []
+
+    act.project:
+        class:      Act\ResourceBundle\Services\Project
+        arguments:  ["@doctrine.orm.entity_manager"]
+
+    act_resource.planning_manager:
+        class:      Act\ResourceBundle\Services\Project\PlanningManager
+        arguments:  ["@service_container"]
+
+    act_resource.team.team_projects_manager:
+        class:      Act\ResourceBundle\Services\Team\TeamProjectsManager
+        arguments:  ["@doctrine.orm.entity_manager"]
+
+    act_resource.first_login:
+        class:      Act\ResourceBundle\Services\User\FirstLogin
+        arguments:  ["@doctrine.orm.entity_manager", "@security.context", "@fos_user.user_manager", "@session", "@translator"]
+
+    act_resource.week_planning_manager:
+        class:      Act\ResourceBundle\Services\User\WeekPlanningManager
+        arguments:  ["@doctrine.orm.entity_manager", "@act_main.date.manager"]
+
+    act_resource.timeline_manager:
+        class:      Act\ResourceBundle\Services\Project\TimeLineManager
+        arguments:  ["@doctrine.orm.entity_manager", "@router", "@translator"]
+
+    act_resource.year_summary:
+        class:      Act\ResourceBundle\Services\Summary\YearSummary
+        arguments:  ["@service_container"]
+        scope:      request
+
+    kernel.listener.request:
+        class:      Act\ResourceBundle\Listener\CheckLinkedUserListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+        arguments: ["@router", "@translator", "@act_resource.first_login"]
+
+    kernel.listener.simulation:
+        class:      Act\ResourceBundle\Listener\SimulationRequestListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+        arguments:  ["@doctrine.orm.entity_manager", "@router", "@security.context", "@translator"]
+
+    act_resource.assignment.previsional:
+        class:      Act\ResourceBundle\Services\Assignment\PrevisionalAssignments
+        arguments:  ["@act_main.date.manager", "@doctrine.orm.entity_manager", "@security.context", "@request", "@router"]
+        scope:      request
+
+    act_resource.previsional_assignments.export:
+        class: Act\ResourceBundle\Services\Export\PrevisionalAssignmentsExport
+        arguments: ["@act_resource.assignment.previsional", "@phpexcel", "@translator"]
+        scope:     request
+
+    act_resource.resource.manager:
+        class:      Act\ResourceBundle\Services\Resource\ResourceManager
+        arguments:  ["@doctrine.orm.entity_manager", "@act_main.date.manager"]
+
+    act_resource.team.manager:
+            class:      Act\ResourceBundle\Services\Team\TeamManager
+            arguments:  ["@doctrine.orm.entity_manager", "@act_resource.resource.manager", "@security.context"]
+
+    act_resource.various_summary:
+       class: Act\ResourceBundle\Services\Summary\VariousSummary
+       arguments:  ["@doctrine.orm.entity_manager", "@?debug.stopwatch"]
+
+    act_resource.assignment_listener:
+        class: Act\ResourceBundle\Listener\AssignmentListener
+        tags:
+            - { name: doctrine.event_subscriber}
+        arguments: ["@serializer"]
+
+    act_resource.project_export:
+        class: Act\ResourceBundle\Services\Export\ProjectExport
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    act_resource.resources_usage_export:
+        class: Act\ResourceBundle\Services\Export\ResourceUsageExport
+        arguments: ["@phpexcel", "@translator", "@act_resource.resources_usage_manager"]
+
+    act_resource.import:
+        class: Act\ResourceBundle\Services\Import\Import
+        abstract: true
+        calls:
+            - [setEntityManager, ["@doctrine.orm.entity_manager"]]
+            - [setExcelObject, ["@phpexcel"]]
+
+    act_resource.project_import:
+        class: Act\ResourceBundle\Services\Import\ProjectImport
+        parent: act_resource.import
+        calls:
+            - [setTranslator, ["@translator"]]
+
+    act_resource.bankholiday_import:
+        class: Act\ResourceBundle\Services\Import\BankHolidayImport
+        parent: act_resource.import
+
+    act_resource.twig.resource_extension:
+        class: Act\ResourceBundle\Twig\ResourceExtension
+        arguments:  ["@doctrine.orm.entity_manager", "@security.context"]
+        tags:
+            - { name: twig.extension}
+
+    act_resource.listener.ldap_user_not_found:
+        class: Act\ResourceBundle\Listener\LdapUserNotFoundListener
+        arguments: ["@fos_user.user_manager", "@fos_user.group_manager"]
+        tags:
+            - { name: kernel.event_listener, event: ldap.user.not.found, method: onUserNotFound }
+
+    act_resource.listener.ldap_user_loaded:
+        class: Act\ResourceBundle\Listener\LdapUserLoadedListener
+        arguments: ["@fos_user.user_manager"]
+        tags:
+            - { name: kernel.event_listener, event: ldap.user.loaded, method: onUserLoaded }
+
+    act_resource.simulation:
+        class: Act\ResourceBundle\Services\Simulation\Simulation
+        arguments: ["@session", "@doctrine.orm.entity_manager", "@security.context", "@translator"]
+
+    act_resource.resources_usage_manager:
+        class: Act\ResourceBundle\Services\Resource\ResourcesUsageManager
+        arguments: ["@doctrine.orm.entity_manager", "@act_resource.resource.manager", "@act_main.date.manager"]
+
+    act_resource.weekly_projects_manager:
+            class: Act\ResourceBundle\Services\Project\WeeklyProjectsManager
+            arguments:  ["@doctrine.orm.entity_manager"]

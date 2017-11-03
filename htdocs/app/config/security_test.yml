@@ -1,0 +1,8 @@
+security:
+    firewalls:
+        admin:
+            http_basic: true
+            stateless: false
+        main:
+            http_basic: true
+            stateless: false

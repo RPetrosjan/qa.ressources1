@@ -1,0 +1,10 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+    {% if value != null %}
+        <span class="user-locale-flag"><img src="{{ asset('bundles/actresource/img/flags/' ~ value ~ '.png') }}" /></span>
+        <span>{{ ("locale." ~ value)|trans }}</span>
+    {% else %}
+        <span>{{ "undefined"|trans }}</span>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field%}
+
+    {% for role in object.roles %}
+        <span class="label label-info pull-right" style="margin: auto 2px 2px auto;">
+            {{ role }}
+        </span>
+        <br/>
+    {% endfor %}
+
+
+{% endblock %}

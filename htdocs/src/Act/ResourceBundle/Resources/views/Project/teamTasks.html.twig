@@ -1,0 +1,84 @@
+<tr>
+    {% set first = true %}
+    {% set lastTask = null %}
+    {% for task in row %}
+
+        {% set taskStart = task.start %}
+        {% set taskEnd = task.end %}
+        {% set duration = task.getDuration().nbWorkingDays %}
+
+        {# On vérifie que la tâche doit bien être visible #}
+        {% if (taskEnd < planning.start or taskStart > planning.end) == false %}
+            {# On calcule le nombre de jours affichés #}
+            {% if taskStart < planning.start and taskEnd > planning.end %}
+                {% set nbdays = planning.nbdays %}
+            {% elseif taskStart < planning.start %}
+                {% set nbdays = manager.nbWorkingDaysBetween(planning.start, taskEnd) %}
+            {% elseif taskEnd > planning.end %}
+                {% set nbdays = manager.nbWorkingDaysBetween(taskStart, planning.end) %}
+            {% else %}
+                {% set nbdays = duration %}
+            {% endif %}
+
+            {% if first %}
+                {# Si c'est la 1ere tâche il faut afficher les jours "vides" avant #}
+                {% if taskStart > planning.start %}
+                    {% set nbDays = manager.nbWorkingDaysBetween(planning.start, task.start) - 1 %}
+
+                    {% for i in 1..nbDays %}
+                        <td class="taskvoid"></td>
+                    {% endfor %}
+                {% endif %}
+                {% set first = false %}
+            {% else %}
+                {# Sinon on affiche juste les jours "vides" entre les deux tâches #}
+                {% set nbDays = manager.nbWorkingDaysBetween(lastTask.end, task.start) - 1 %}
+
+                {% if nbDays - 1 > 0 %}
+                    {% for i in 1..nbDays-1 %}
+                        <td class="taskvoid"></td>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+            {# Add workload assigned / sold percentage color data #}
+            {% set classes = task.getCSSClass() %}
+            {% set totalAssigned = task.getSumWorkloadAssigned() %}
+            {% if totalAssigned == 0 %}
+                {%  set classes = classes ~ ' total-assigned-null' %}
+            {% elseif totalAssigned < task.workloadsold %}
+                {%  set classes = classes ~ ' total-assigned-lower' %}
+            {% elseif totalAssigned == task.workloadsold %}
+                {%  set classes = classes ~ ' total-assigned-equals' %}
+            {% elseif totalAssigned > task.workloadsold %}
+                {%  set classes = classes ~ ' total-assigned-higher' %}
+            {% endif %}
+
+            <td class="{{ classes }}" colspan="{{ nbdays }}">
+                                    <span class="task-name" title="{{ task }} ({{ totalAssigned }}/{{ task.workloadsold|default('0') }} md)">
+                                    {% if nbdays == 1 %}{{ task|truncate(4, true, '...') }}
+                                    {% elseif nbdays == 2 %}{{ task|truncate(10, true, '...') }}
+                                    {% elseif nbdays == 3 %}{{ task|truncate(20, true, '...') }}
+                                    {% else %}
+                                        {{ task }}
+                                    {% endif %}
+
+                                        {% if task.workloadsold and nbdays > 3 %}
+                                            ({{ totalAssigned }}/{{ task.getTotalChildrenWorkloadSold() }} md)
+                                        {% endif %}
+                                    </span>
+            </td>
+
+            {% set lastTask = task %}
+        {% endif %}
+    {% endfor %}
+
+    {# Après la dernière tâche il faut ajouter les jours "vides" #}
+    {% if lastTask != null and lastTask.end < planning.end %}
+        {% set nbDays = manager.nbWorkingDaysBetween(lastTask.end, planning.end) - 1 %}
+
+        {% for i in 1..nbDays %}
+            <td class="taskvoid"></td>
+        {% endfor %}
+    {% endif %}
+</tr>

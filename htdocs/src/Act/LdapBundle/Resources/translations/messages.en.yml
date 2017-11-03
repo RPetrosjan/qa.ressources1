@@ -1,0 +1,9 @@
+ldap:
+    connect.failed: Connection to LDAP server failed
+    bind.failed: Authentication to LDAP server failed
+
+user:
+    account:
+        locked: This account is locked, please contact an administrator
+        disabled: This account is disabled or waiting for activation
+        expired: This account is expired

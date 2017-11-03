@@ -1,0 +1,6 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+    <span style="background-color:{{ object.getColor() }};" class="team-color"></span>
+    <span style="float:left;" class="team-name">{{ value }}</span>
+{% endblock %}

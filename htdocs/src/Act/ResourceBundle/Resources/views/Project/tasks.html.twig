@@ -1,0 +1,237 @@
+{% extends "ActResourceBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ "tasks"|trans }} : {{ project }} - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+        'libs/jquery-ui/jquery-ui.min.css'
+        'libs/jquery-ui/jquery-ui.structure.min.css'
+        'libs/jquery-ui/jquery-ui.theme.min.css'
+     %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body_attributes %}id="project-tasks-page"{% endblock%}
+
+{% block body_title_right %}
+    <div class="btn-group">
+        {% if is_granted('ROLE_RP') %}
+            <a class="btn btn-primary"  href="{{ path('act_resource_task_generate', {'project': project.id, 'referer': app.request.uri }) }}" title="{{ "metatask.fast.add"|trans }}">
+                <i class="glyphicon glyphicon-time"></i>
+            </a>
+            <a class="btn btn-primary" onclick="showForm();" href="#"><i class="glyphicon glyphicon-plus-sign"></i> {{ "metatask.add"|trans }}</a>
+        {% endif %}
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+
+        {% include 'ActResourceBundle:Project:links_dropdown.html.twig' with {'project': project} %}
+    </div>
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "tasks"|trans }} : {{ project }}
+{% endblock %}
+
+{% block body_content %}
+    <div id="taskcolor-legend" class="clearfix">
+        <div class="color-legend">
+            <span style="background-color: black;"></span>&nbsp;{{ "metatasks"|trans }} ({{ "not.assignable"|trans }})
+        </div>
+
+        <div class="color-legend">
+            <span style="background-color: rgba(200, 200, 200, 0.5);"></span>&nbsp;{{ "tasks"|trans }}
+        </div>
+
+        <div class="color-legend">
+            <span style="background-color: rgba(200, 200, 200, 0.1);"></span>&nbsp;{{ "subtasks"|trans }} ({{ "dedicated.to.cpt.organization"|trans }})
+        </div>
+
+        <form id="tasks-save" class="pull-right" name="tasks-save" action="{{ path('act_resource_project_save_sortable', {'id': project.id }) }}" method="POST">
+            <input type="hidden" name="refered" value="{{ referer }}">
+            <input type="hidden" id="tasks-data" name="tasks">
+            <button type="submit" class="btn btn-warning btn-large" id="task-sortable-save"><i class="glyphicon glyphicon-ok"></i> {{ "save.modifications"|trans }}</button>
+        </form>
+    </div>
+
+    <ol class="sortable" id="project-tasks">
+        {% for metatask in project.getMetaTasks() %}
+        <li id="task-{{ metatask.id }}" class="metatask">
+            <div class="metatask-content clearfix task-content">
+                {% set task = metatask %}
+                {% set route = 'admin_act_resource_project_metatask' %}
+                {% block taskDisplay %}
+                <div class="task-fold">
+                    <i class="glyphicon glyphicon-minus" title="{{ "hide.tasks"|trans }}"></i>
+                </div>
+
+                {% if is_granted('ROLE_RP') or cptRights.hasAccess(task, app.user) %}
+                <div class="task-move">
+                    <i class="glyphicon glyphicon-move" title="{{ "move.tasks"|trans }}"></i>
+                </div>
+                {% endif %}
+
+                <div class="task-name">
+                    {{ task.name }}
+                </div>
+
+                <div class="task-on-hover">
+                    <div class="task-actions">
+                        {% if is_granted('ROLE_RP') or cptRights.hasAccess(task, app.user) %}
+                            <a class="btn btn-danger task-delete" href="#" title="{{ "delete"|trans }}"><i class="glyphicon glyphicon-trash"></i></a>
+                            <a class="btn btn-default task-edit" href="{{ path(route ~ '_edit', {'id': project.id, 'childId': task.id, 'referer': app.request.uri }) }}" title="{{ "edit"|trans }}">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </a>
+                        {% endif %}
+
+                        {% if is_granted('ROLE_RP') or cptRights.canCreateChilds(task, app.user) %}
+                            <a class="btn btn-success task-add-child" href="#" title="{{ "task.add.child"|trans }}"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                            <a class="btn btn-warning task-fast-cut" href="{{ path('act_resource_task_generate', {'project': project.id, 'task': task.id, 'referer': app.request.uri }) }}" title="{{ "swift.cut"|trans }}"><i class="glyphicon glyphicon-time"></i></a>
+                        {% endif %}
+                    </div>
+
+                    <div class="task-teams">
+                        {% if task.teams|length > 0 or task.teamprofiles|length > 0 %}
+                            {% for team in task.teams %}
+                                <span style="color:{{team.color}};">{{ team }}</span>
+                            {% endfor %}
+
+                            {% for teamprofile in task.teamprofiles %}
+                                <span style="color:{{teamprofile.team.color}};">{{ teamprofile }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="task-workload">
+                        {{ task.getWorkloadSold() }} {{ "days.sold"|trans }}<br/>
+                        {{ task.getSumWorkloadAssigned() }} {{ "days.assigned"|trans }}
+                    </div>
+
+                    <div class="task-duration">
+                        {% set duration = task.getDuration() %}
+                        {{ duration.nbDays }} {{ "days.calendar"|trans }}
+                        <br/> {{ duration.nbWorkingDays }} {{ "days.working"|trans }}
+                    </div>
+
+                    <div class="task-dates">
+                        {{ "from"|trans }} {{ task.start|date('d/m/Y') }} (W{{ task.start|date('W') }})
+                        <br/> {{ "to"|trans }} {{ task.end|date('d/m/Y') }} (W{{ task.end|date('W') }})
+                    </div>
+                </div>
+                {% endblock %}
+            </div>
+
+            {% if metatask.getCommonTasks()|length > 0%}
+            <ol>
+            {% for commontask in metatask.getCommonTasks() %}
+                <li id="task-{{ commontask.id }}" class="commontask{% for team in commontask.getAssociatedTeams() %} team-{{ team.id }}{% endfor %}">
+                    <div class="commontask-content clearfix task-content">
+                        {% set task = commontask %}
+                        {% set route = 'admin_act_resource_metatask_commontask' %}
+                        {{ block('taskDisplay') }}
+                    </div>
+
+                    {% if commontask.getSubTasks()|length > 0%}
+                    <ol>
+                    {% for subtask in commontask.getSubTasks() %}
+                        <li id="task-{{ subtask.id }}" class="subtask{% for team in subtask.getAssociatedTeams() %} team-{{ team.id }}{% endfor %}">
+                            <div class="subtask-content clearfix task-content">
+                                {% set task = subtask %}
+                                {% set route = 'admin_act_resource_commontask_subtask' %}
+                                {{ block('taskDisplay') }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                    </ol>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ol>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+
+    {% if is_granted('ROLE_RP') or cptRights.isCPT(project, app.user) %}
+        <div class="modal fade" id="addTask">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form name="addTask" method="post" action="{{ path('act_resource_project_add_task', {'id': project.id}) }}" class="form-horizontal" style="margin-bottom:0 !important;">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h3>{{ "task.add"|trans }}</h3>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="referer" value="{{ referer }}">
+                            <input type="hidden" id="task-parent" name="parent" value="">
+
+                            <div class="form-group">
+                                <label for="task-name" class="col-sm-5 control-label">{{ "name"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <input type="text" name="name" id="task-name" required="required" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="task-start" class="col-sm-5 control-label">{{ "date.start"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <input type="text" name="start" id="task-start" required="required" class="date form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="task-end" class="col-sm-5 control-label">{{ "date.end"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <input type="text" name="end" id="task-end" required="required" class="date form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="task-workloadsold" class="col-sm-5 control-label">{{ "workload.sold"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <input type="text" name="workloadsold" id="task-workloadsold" required="required" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="task-teams" class="col-sm-5 control-label">{{ "teams.profiles.linked"|trans }}</label>
+                                <div class="col-sm-5">
+                                    <select id="task-teams" name="teams[]" multiple="" size="10" class="form-control">
+                                        {% for team in teams %}
+                                            <option value="team-{{ team.id }}" style="color:{{ team.color }};">{{ team }}</option>
+                                            {% for profile in team.profiles %}
+                                                <option value="profile-{{ profile.id }}" style="color:{{ team.color }};"> || {{ profile }}</option>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary pull-left" value="{{ "validate"|trans }}">
+                            <input type="reset" class="btn" data-dismiss="modal" value="{{ "cancel"|trans }}">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var isCPT = {% if cptRights.isCPT(project, app.user) %}true{% else %}false{% endif %};
+    </script>
+
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.js'
+        'libs/js/jquery.mjs.nestedSortable.js'
+        'bundles/actresource/js/project_tasks.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

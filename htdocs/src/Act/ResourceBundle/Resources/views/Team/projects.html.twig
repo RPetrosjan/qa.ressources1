@@ -1,0 +1,118 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ team }} - {{ "team.projects"|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+        'libs/jquery-ui/jquery-ui.min.css'
+        'libs/jquery-ui/jquery-ui.structure.min.css'
+        'libs/jquery-ui/jquery-ui.theme.min.css'
+        'bundles/actresource/css/project_show.css'
+        'libs/select2/select2.css'
+        'libs/select2/select2-bootstrap.css'
+     %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body_attributes %}id="team-projects"{% endblock%}
+
+{% block body_title_right %}
+    <div class="btn-group">
+        <a class="btn btn-primary" data-toggle="modal" href="#chooseDates"><i class="glyphicon glyphicon-zoom-in"></i> {{ "display.define"|trans }}</a>
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+
+        {% if is_granted('ROLE_RP') %}
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ path('act_resource_team_plannings', { 'id': team.id, 'referer': app.request.uri }) }}"><i class="glyphicon glyphicon-fullscreen"></i> {{ "project.planning.advanced"|trans }}</a></li>
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block body_title_text %}
+    {{ team }} - {{ "team.projects"|trans }}
+{% endblock %}
+
+{% block body_content %}
+    <div id="team-projects-planning">
+        {% for planning in manager.getPlannings() %}
+        <div class="planning planning-project" id="project-{{ planning.project.id }}" style="background-color: rgba({{ planning.project.color|rgbColor }}, 0.1);">
+            {% include 'ActResourceBundle:Project:onlyheader.html.twig' with {'planning': planning, 'type': 'project', 'ajax': false} %}
+
+            <div id="planning-project-{{planning.project.id}}" class="planning-table-container planning-content">
+                {% include 'ActResourceBundle:Project:onlyplanning.html.twig' with {'manager': manager, 'planning': planning} %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="modal fade" id="chooseDates">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="choose-dates" method="get" action="{{ path('act_resource_team_projects', {'id': team.id}) }}" class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h3>{{ "display.definition"|trans }}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="project-start" class="col-sm-2 control-label">{{ "from"|trans }}</label>
+                            <div class="col-sm-5">
+                                <input id="project-start" class="form-control" name="start" type="text" required="required" value="{{ manager.getStart()|date('d/m/Y') }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-end" class="col-sm-2 control-label">{{ "to"|trans }}</label>
+                            <div class="col-sm-5">
+                                <input id="project-end" class="form-control" name="end" type="text" required="required" value="{{ manager.getEnd()|date('d/m/Y') }}">
+                            </div>
+                        </div>
+                        <div class="form-group" id="project-list">
+                            <label for="projects" class="col-sm-2 control-label">{{ "projects"|trans }}</label>
+                            <div class="col-sm-5">
+                                <select id="projects" name="projects[]" multiple="multiple" class="form-control">
+                                    {% for p in projects %}
+                                        <option value="{{ p.id }}" {% if p in chosenProjects %}selected="selected"{% endif %} style="color:{{p.color}};">{{ p }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input name="submit" type="submit" class="btn btn-primary pull-left" value="{{ "validate"|trans }}">
+                        <input name="reset" type="submit" class="btn btn-warning pull-left" value="{{ "reinitialize"|trans }}">
+                        <input type="reset" class="btn btn-default" data-dismiss="modal" value="{{ "cancel"|trans }}">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.js'
+        'libs/js/stickyheader.jquery.js'
+        'bundles/actresource/js/project_show.js'
+        'bundles/actresource/js/project.js'
+        'libs/select2/select2.min.js'
+        'libs/select2/select2.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        var hide = {% if manager.getHide() %}1{% else %}0{% endif %};
+        var start = '{{ manager.getStart()|date('d/m/Y') }}';
+        var end = '{{ manager.getEnd()|date('d/m/Y') }}';
+        var isCPT = false;
+        var loadingImgSrc = '{{ asset('bundles/actresource/img/assignment_loading.gif') }}';
+
+        $("#projects").select2();
+    </script>
+{% endblock %}

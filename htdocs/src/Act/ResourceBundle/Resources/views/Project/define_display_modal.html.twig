@@ -1,0 +1,42 @@
+<div class="modal fade" id="chooseDates">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="choose-dates" method="get" action="{{ path }}" class="form-horizontal" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3>{{ "display.definition"|trans }}</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="project-start" class="col-sm-2 control-label">{{ "from"|trans }}</label>
+                        <div class="col-sm-5">
+                            <input id="project-start" class="form-control" name="start" type="text" required="required" value="{{ manager.getStart()|date('d/m/Y') }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="project-end" class="col-sm-2 control-label">{{ "to"|trans }}</label>
+                        <div class="col-sm-5">
+                            <input id="project-end" class="form-control" name="end" type="text" required="required" value="{{ manager.getEnd()|date('d/m/Y') }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1" id="hide" name="hide" {% if manager.getHide() %}checked="checked"{% endif %}> {{ "planning.show.only.concerned.resources"|trans }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary pull-left" value="{{ "validate"|trans }}">
+                    {% if project is defined %}
+                        <a class="btn pull-left" href="{{ path(route, {'id': project.id, 'start': project.getStart()|date('d/m/Y'), 'end': project.getEnd()|date('d/m/Y')}) }}">{{ "project.show.all"|trans }}</a>
+                    {% endif %}
+                    <input type="reset" class="btn btn-default" data-dismiss="modal" value="{{ "cancel"|trans }}">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

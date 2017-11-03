@@ -1,0 +1,97 @@
+{% extends "ActResourceBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ "task.generate"|trans }} : {{ project }} - {{ (task is defined ? task ~ ' - ' : '') }} {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets
+        'libs/jquery-ui/jquery-ui.min.css'
+        'libs/jquery-ui/jquery-ui.structure.min.css'
+        'libs/jquery-ui/jquery-ui.theme.min.css'
+        'bundles/actresource/css/project_tasks.css'
+     %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "task.generate"|trans }}
+    <i class="glyphicon glyphicon-question-sign help-popover" data-content="{{ "task.generate.help"|trans }}"></i>
+{% endblock %}
+
+{% block body_content %}
+    <form id="form-cut-fast-task" class="form-inline" action="{{ path('act_resource_task_generate', {'project': project.id, 'task': (task is not null ? task : null) }) }}" method="post">
+        <h2>{{ 'project'|trans }} : <span style="color: {{ project.getColor() }};">{{ project }}</span></h2>
+        {% if task is not null %}<h3>{{ 'task'|trans }} : <span>{{ task }}</span></h3>{% endif %}
+        <hr />
+
+        <input type="hidden" name="referer" value="{{ referer }}">
+
+        {% for predef in predefined %}
+            <div id="task{{ loop.index }}" class="subtask">
+                <input type="text" name="name[]" id="task{{ loop.index }}-name" class="form-control name-field addMargin" required="required" value="{{ predef }}" placeholder="{{ "name"|trans }}" />
+                <input type="text" name="workloadsold[]" id="task{{ loop.index }}-workloadsold" class="form-control form-task-workload" required="required" placeholder="{{ "workload.sold"|trans }}" value="" />
+                <input type="text" name="start[]" id="task{{ loop.index }}-start" class="form-control date start" required="required" placeholder="{{ "date.start"|trans }}" {% if loop.first %}value=""{% endif %} />
+                <input type="text" name="end[]" id="task{{ loop.index }}-end" class="form-control date end" required="required" placeholder="{{ "date.end"|trans }}" {% if loop.last %}value=""{% endif %} />
+
+                <select name="teamprofiles[{{ loop.index }}][]" id="task{{ loop.index }}-teamprofiles" class="form-control select-placeholder">
+                    <option value="" selected="selected">{{ "teams"|trans }}</option>
+                    {% for team in teams %}
+                        <option value="team-{{ team.id }}" style="color:{{ team.color }};">{{ team }}</option>
+                        {% for profile in team.profiles %}
+                            <option value="profile-{{ profile.id }}" style="color:{{ team.color }};"> || {{ profile }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+                <a onclick="toggle_multi_select({{ loop.index }}); return false;" href="#"><img id="select-team-toggler-{{ loop.index }}" src="{{ asset('bundles/actresource/img/bullet_toggle_plus.png') }}"></a>
+
+
+                <a class="btn btn-danger removeSubtask" title="{{ "delete"|trans }}"><i class="glyphicon glyphicon-minus-sign"></i></a>
+                <hr/>
+            </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <a class="btn btn-success" title="{{ "add"|trans }}" id="addSubtask"><i class="glyphicon glyphicon-plus-sign"></i> {{ "add"|trans }}</a>
+            <button class="btn btn-primary" type="submit">{{ "validate"|trans }}</button>
+            <a class="btn btn-default pull-right" href="{{ referer }}">{{ "cancel"|trans }}</a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.js'
+        'bundles/actresource/js/task_generate.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        var currentIndex = {{ predefined|length + 1 }};
+        var plus = "{{ asset('bundles/actresource/img/bullet_toggle_plus.png') }}";
+        var moins = "{{ asset('bundles/actresource/img/bullet_toggle_minus.png') }}";
+
+        function addSubtask()
+        {
+            var html = '<div id="task'+currentIndex+'" class="subtask">';
+            html += '<input type="text" name="name[]" id="task'+currentIndex+'-name" class="form-control name-field addMargin" required="required" class="addMargin" placeholder="{{ "name"|trans }}" />';
+            html += '<input type="text" name="workloadsold[]" id="task'+currentIndex+'-workloadsold" class="form-control addMargin form-task-workload" required="required" placeholder="{{ "workload.sold"|trans }}" />';
+            html += '<input type="text" name="start[]" id="task'+currentIndex+'-start" class="form-control date start addMargin" required="required" placeholder="{{ "date.start"|trans }}" />';
+            html += '<input type="text" name="end[]" id="task'+currentIndex+'-end" class="form-control date end addMargin" required="required" placeholder="{{ "date.end"|trans }}" />';
+            html += '<select name="teamprofiles['+currentIndex+'][]" id="task'+currentIndex+'-teamprofiles" class="form-control select-placeholder"><option value="" selected="selected">{{ "teams"|trans }}</option>';
+            html += '{% for team in teams %}<option value="team-{{ team.id }}" style="color:{{ team.color }};">{{ team }}</option>{% for profile in team.profiles %}<option value="profile-{{ profile.id }}" style="color:{{ team.color }};"> || {{ profile }}</option>{% endfor %}{% endfor %}';
+            html += '</select>';
+            html += '<a onclick="toggle_multi_select('+currentIndex+'); return false;" href="#"><img id="select-team-toggler-'+currentIndex+'" src="{{ asset('bundles/actresource/img/bullet_toggle_plus.png') }}" alt="Bullet_toggle_plus"></a>';
+
+            html += '<a class="btn btn-danger removeSubtask" title="{{ "delete"|trans }}"><i class="glyphicon glyphicon-minus-sign"></i></a>';
+            html += '<hr/>';
+            html += '</div>';
+
+            $(html).insertBefore('a#addSubtask');
+            updateDatePickers();
+            currentIndex++;
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "ActResourceBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ "user.own.profile"|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+        'libs/jquery-ui/jquery-ui.min.css'
+        'libs/jquery-ui/jquery-ui.structure.min.css'
+        'libs/jquery-ui/jquery-ui.theme.min.css'
+        'bundles/actresource/css/my_profile.css'
+    %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "user.own.profile"|trans }}
+{% endblock %}
+
+{% block body_content %}
+<div id="my-profile">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#profile" data-toggle="tab">{{ "profile"|trans }}</a>
+        </li>
+        <li>
+            <a href="#prefered-projects" data-toggle="tab">{{ "projects.prefered"|trans }}</a>
+        </li>
+        {% if is_granted('ROLE_RP') %}
+        <li>
+            <a href="#previsional-email" data-toggle="tab">{{ "previsional.email"|trans }}</a>
+        </li>
+        {% endif %}
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="profile">
+            <form class="form-horizontal" action="{{ path('act_resource_user_own_profile_save') }}" method="post">
+                <div class="form-group">
+                    <label for="email" class="col-sm-2 control-label">{{ "email"|trans }}</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="email" name="email" placeholder="{{ app.user.email }}" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="slack-user" class="col-sm-2 control-label">{{ "slack.username"|trans }}</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="slack-user" name="slack-user" value="{{ app.user.slackUser }}" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="locale" class="col-sm-2 control-label">{{ "language"|trans }}</label>
+                    <div class="col-sm-3">
+                        <select id="locale" name="locale" class="form-control">
+                            <option value=""></option>
+                            <option value="fr"{% if app.user.locale == 'fr' %} selected="selected"{% endif %}>{{ "language.french"|trans }}</option>
+                            <option value="en"{% if app.user.locale == 'en' %} selected="selected"{% endif %}>{{ "language.english"|trans }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">{{ "save"|trans }}</button>
+                        <button type="reset" class="btn btn-default">{{ "reset"|trans }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="tab-pane" id="prefered-projects">
+            <button type="submit" class="btn btn-warning btn-large pull-right" id="prefered-projects-save"><i class="icon-ok icon-white"></i> {{ "save.modifications"|trans }}</button>
+
+            <h6>{{ "your.prefered.projects"|trans }}</h6>
+            <ul id="prefered-projects-selected">
+                {% for pp in prefered_projects %}
+                    <li id="project-{{ pp.project.id }}" class="project"><span class="star-select star-full"></span><span class="project-name">{{ pp.project }}</span></li>
+                {% endfor %}
+            </ul>
+
+            <h6>{{ "all.projects"|trans }}</h6>
+            <ul id="prefered-projects-unselected">
+                {% for p in projects %}
+                    <li id="project-{{ p.id }}" class="project"><span class="star-select star-empty"></span><span class="project-name">{{ p }}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if is_granted('ROLE_RP') %}
+        <div class="tab-pane" id="previsional-email">
+            <p><i class="icon-info-sign"></i> {{ "previsional.email.info"|trans|raw }}</p>
+
+            <form class="form-horizontal" action="{{ path('act_resource_user_previsional_email_save') }}" method="post">
+                {% for team in teams %}
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-10">
+                        <label>
+                            <input type="checkbox" name="teams[]" value="{{ team.id }}" {% if app.user.hasSubscribedTo(team) %}checked="checked"{% endif %}>
+                            <span style="color: {{ team.getColor() }};">{{ team.name }}</span>
+                        </label>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-10">
+                        <button type="submit" class="btn btn-primary">{{ "save"|trans }}</button>
+                        <button type="reset" class="btn btn-default">{{ "reset"|trans }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.js'
+        'bundles/actresource/js/my_profile.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

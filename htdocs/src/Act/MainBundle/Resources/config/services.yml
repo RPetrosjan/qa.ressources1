@@ -1,0 +1,50 @@
+parameters:
+    act_main.listener.locale.class: Act\MainBundle\Listener\LocaleListener
+    act_main.referer.manager.class: Act\MainBundle\Services\RefererManager
+    act_main.date.manager.class: Act\MainBundle\Services\DateManager
+    act_main.color.manager.class: Act\MainBundle\Services\ColorManager
+    act_main.time.manager.class: Act\MainBundle\Services\TimeManager
+
+    # Override the default test client class with our own
+    # in order to ensure database isolation during tests
+    # see http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests
+    test.client.class:              Act\MainBundle\Tests\Client
+
+    # Override default behavior for target path
+    # see http://symfony.com/fr/doc/current/cookbook/security/target_path.html
+    security.exception_listener.class: Act\MainBundle\Security\Firewall\ExceptionListener
+
+    # Default route
+    act_main.default.route: act_resource_home
+
+services:
+    act_main.listener.locale:
+        class: %act_main.listener.locale.class%
+        arguments: [%locale%]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    act_main.referer.manager:
+        class:      %act_main.referer.manager.class%
+        arguments:  [@request, @router, %act_main.default.route%]
+        scope:      request
+
+    act_main.date.manager:
+        class:      %act_main.date.manager.class%
+
+    act_main.color.manager:
+        class:      %act_main.color.manager.class%
+
+    act_main.time.manager:
+        class:      %act_main.time.manager.class%
+
+    act_main.validator.daterange:
+        class: Act\MainBundle\Validator\Constraints\DateRangeValidator
+        tags:
+            - { name: validator.constraint_validator, alias: daterange_validator }
+
+    act_main.twig.act_extension:
+        class: Act\MainBundle\Twig\ActExtension
+        arguments: [@act_main.color.manager, @act_main.time.manager]
+        tags:
+            - { name: twig.extension }

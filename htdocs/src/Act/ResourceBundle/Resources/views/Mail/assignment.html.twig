@@ -1,0 +1,127 @@
+{% extends '::mail_layout.html.twig' %}
+
+{% block css %}
+    <style type="text/css">
+        table#assignments {
+            text-align: center;
+        }
+
+        table#assignments tr td,
+        table#assignments tr th {
+            text-align: center;
+            border: 1px solid #EEEEEE;
+            vertical-align: middle;
+            padding: 10px;
+        }
+
+        table#assignments thead tr th {
+            background-color: #F5F5F5;
+        }
+
+        table#assignments tbody table tr td {
+            border: 0;
+        }
+
+        table#assignments div.planning-workload {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        table#assignments div.planning-task {
+            font-size: 14px;
+        }
+
+        table#assignments div.planning-subtask {
+            font-size: 12px;
+        }
+
+        table#assignments div.planning-comment {
+            margin: 10px 0 10px 0;
+            font-size: 10px;
+            font-style: italic;
+        }
+    </style>
+{% endblock %}
+
+{% block banner_title %}
+    {{ "mail.assignment.subject"|trans }} {{ resource.nameshort }}, W{{ "now"|date('W') }}
+{% endblock %}
+
+{% block body %}
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" id="assignments">
+        <thead>
+            <tr>
+                <th rowspan="2" width="100">
+                    {{ "week"|trans }} {{ "now"|date('W') }}
+                </th>
+
+                {% for day in planning.getPeriod() %}
+                    <th {% if day|date('d/m/Y') == "now"|date('d/m/Y') %}class="today"{% endif %}>
+                        {{ day|localeDate('medium','none',null,'EEEE')  }}
+                    </th>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for day in planning.getPeriod() %}
+                    <th {% if day|date('d/m/Y') == "now"|date('d/m/Y') %}class="today"{% endif %}>
+                        {{ day|date('d/m') }}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for projectData in planning.getProjects() %}
+            {% set project = projectData.project %}
+            <tr>
+                <td>
+                    <a style="color:{{ project.getColor() }};" href="{{ url('act_resource_project_show', {'id' : project.id }) }}" title="{{ project.name }}">
+                        {{ project.name }}
+                    </a>
+                </td>
+                {% for dayData in projectData.days %}
+                    {% set day = dayData.date %}
+
+                    {% if dayData.bankholidays is defined %}
+                        <td class="bankholiday">
+                            {% for bankholiday in dayData.bankholidays %}
+                                {{ bankholiday.name }}
+                            {% endfor %}
+                        </td>
+                    {% else %}
+                        <td>
+                            {% if dayData.assignment is defined %}
+                                {% if dayData.assignment.updated >= planning.getStart() %}
+                                    {% if dayData.assignment.updated <= planning.getStart()|date_modify("+5 day") %}
+                                            <div style="color:orange;">
+                                    {% endif %}
+                                {% elseif dayData.assignment.created >= planning.getStart() %}
+                                    {% if dayData.assignment.created <= planning.getStart()|date_modify("+5 day") %}
+                                            <div style="color:green;">
+                                    {% endif %}
+                                {% else %}
+                                                <div>
+                                {% endif %}
+                                <div class="planning-workload">{{ dayData.assignment.getWorkload()|workloadFormat }}</div>
+
+                                {% if dayData.assignment.commontask %}
+                                    <div class="planning-metatask">{{ dayData.assignment.commontask.metatask }}</div>
+                                    <div class="planning-task">{{ dayData.assignment.commontask }}</div>
+                                {% endif %}
+
+                                {% if dayData.assignment.subtask %}
+                                    <div class="planning-subtask">{{ dayData.assignment.subtask.name }}</div>
+                                {% endif %}
+
+                                {% if dayData.assignment.comment %}
+                                    <div class="planning-comment">&laquo; {{ dayData.assignment.comment|nl2br }} &raquo;</div>
+                                {% endif %}
+                                                </div>
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

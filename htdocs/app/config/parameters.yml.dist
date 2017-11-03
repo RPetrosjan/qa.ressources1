@@ -1,0 +1,33 @@
+parameters:
+    # database
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: act1.2
+    database_user: root
+    database_password: poivrine
+
+    # restricted connection
+    restricted_user: root
+    restricted_password: poivrine
+    restricted_secret: RUb-3nS3/cR3tK*3y
+    
+    # swiftmailer
+    mailer_from: actressource@actency.com
+    dev_mail: quentin.fahrner@actency.fr
+    
+    # framework
+    secret: 663d6eac661cbe6175605c6a5195cfbc697e4a53
+    locale: fr
+    
+    # custom parameters
+    host: ressources.actency.fr
+
+    # Ldap configuration
+    # Set 192.168.10.190 on local
+    # Set strasbourg.actency.fr on prod/qa
+    ldap_server: 192.168.10.190
+    ldap_port: 389
+    ldap_login_prefix: Actency\
+    ldap_base_dn: OU=SBSUsers,OU=Users,OU=MyBusiness,DC=actency,DC=local
+    ldap_user_field: sAMAccountName

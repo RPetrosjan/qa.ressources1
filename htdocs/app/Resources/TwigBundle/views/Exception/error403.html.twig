@@ -1,0 +1,36 @@
+{% extends '::layout.html.twig' %}
+
+{% block title %}Accès interdit - {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        #page-alerts {
+            padding: 0;
+        }
+
+        .jumbotron {
+            text-align: center;
+        }
+
+        .jumbotron h1 span {
+            vertical-align: top;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1>
+                <span class="text-danger">
+                    <span class="glyphicon glyphicon-minus-sign"></span>
+                    Zone restreinte
+                </span>
+            </h1>
+
+            <p>
+                Vous n'êtes pas autorisé à accèder à cette page.
+            </p>
+        </div>
+    </div>
+{% endblock %}

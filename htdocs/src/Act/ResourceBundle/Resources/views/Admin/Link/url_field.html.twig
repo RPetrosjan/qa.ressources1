@@ -1,0 +1,11 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+    <a href="{{ object.getPath() }}" target="_blank">
+        {{ object.url|length > 40 ? object.url|slice(0, 40) ~ '...' : object.url}}
+    </a>
+
+    {% if object.getType() == 3 %}
+        <span>{{ "url.internal.help"|trans }}</span>
+    {% endif %}
+{% endblock %}

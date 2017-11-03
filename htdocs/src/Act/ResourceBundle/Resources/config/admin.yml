@@ -1,0 +1,154 @@
+services:
+    sonata.admin.project:
+            class: Act\ResourceBundle\Admin\ProjectAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "projects" }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\Project
+                - ActResourceBundle:AdminController\ProjectAdmin
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+                - [ addChild, [ "@sonata.admin.comment" ]]
+                - [ addChild, [ "@sonata.admin.link" ]]
+                - [ addChild, [ "@sonata.admin.metatask" ]]
+                - [ addChild, [ "@sonata.admin.projectcpt" ]]
+                - [ setTemplate, [edit, ActResourceBundle:Admin:Project/edit.html.twig]]
+
+    sonata.admin.projectcpt:
+            class: Act\ResourceBundle\Admin\ProjectCptAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "technical.project.manager", show_in_dashboard: false }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\ProjectCpt
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+
+    sonata.admin.metatask:
+            class: Act\ResourceBundle\Admin\MetaTaskAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "meta.tasks", show_in_dashboard: false }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\MetaTask
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+                - [ addChild, [ "@sonata.admin.commontask" ]]
+
+    sonata.admin.commontask:
+            class: Act\ResourceBundle\Admin\CommonTaskAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "common.tasks", show_in_dashboard: false }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\CommonTask
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+                - [ addChild, [ "@sonata.admin.subtask" ]]
+
+    sonata.admin.subtask:
+            class: Act\ResourceBundle\Admin\SubTaskAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "sub.tasks", show_in_dashboard: false }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\SubTask
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+
+    sonata.admin.comment:
+            class: Act\ResourceBundle\Admin\CommentAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "comments", show_in_dashboard: false }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\Comment
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+
+    sonata.admin.link:
+            class: Act\ResourceBundle\Admin\LinkAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "links", show_in_dashboard: false }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\Link
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+
+    sonata.admin.client:
+            class: Act\ResourceBundle\Admin\ClientAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "clients" }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\Client
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+
+    sonata.admin.team:
+            class: Act\ResourceBundle\Admin\TeamAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "teams" }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\Team
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+                - [ addChild, [ "@sonata.admin.teamprofile" ]]
+                - [ addChild, [ "@sonata.admin.resource" ]]
+
+    sonata.admin.teamprofile:
+            class: Act\ResourceBundle\Admin\TeamProfileAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "project.management", label: "profiles", show_in_dashboard: false }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\TeamProfile
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+
+
+    sonata.admin.resource:
+            class: Act\ResourceBundle\Admin\ResourceAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "resource.management", label: "resources" }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\Resource
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+
+    sonata.admin.location:
+            class: Act\ResourceBundle\Admin\LocationAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "resource.management", label: "locations" }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\Location
+                - ~
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]
+                - [ addChild, [ "@sonata.admin.bankholiday" ]]
+
+    sonata.admin.bankholiday:
+            class: Act\ResourceBundle\Admin\BankHolidayAdmin
+            tags:
+                - { name: sonata.admin, manager_type: orm, group: "resource.management",  label: "bankholidays" }
+            arguments:
+                - ~
+                - Act\ResourceBundle\Entity\BankHoliday
+                - ActResourceBundle:AdminController\BankHolidayAdmin
+            calls:
+                - [ setTranslationDomain, [SonataAdminBundle]]

@@ -1,0 +1,8 @@
+act_resource_previsional_assignments_export:
+    pattern: /previsional
+    defaults: { _controller: "ActResourceBundle:Export:previsionalExport" }
+
+act_resource_project_export:
+  pattern: /project/{id}
+  defaults: { _controller: "ActResourceBundle:Export:projectExport"}
+  requirements: { id: \d+ }

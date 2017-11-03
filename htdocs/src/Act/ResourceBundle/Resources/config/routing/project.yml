@@ -1,0 +1,75 @@
+act_resource_project_show:
+    pattern: /{id}/show
+    defaults: { _controller: "ActResourceBundle:Project:show" }
+    requirements: { id:  \d+ }
+    options:
+        expose: true
+
+act_resource_project_add_assignment_ajax:
+    pattern:  /{id}/addassignment
+    defaults: { _controller: "ActResourceBundle:Project:addassignment" }
+    requirements: { _method: post, id:  \d+ }
+    options:
+        expose: true
+
+act_resource_project_get_teamplanning_ajax:
+    pattern: /{id}/show/load/{team}
+    defaults: { _controller: "ActResourceBundle:Project:getPlanning" }
+    requirements: { id:  \d+, team:  \d+ }
+    options:
+        expose: true
+
+act_resource_project_resource_replace:
+    pattern:  /{id}/replace
+    defaults: { _controller: "ActResourceBundle:Project:replace" }
+    requirements: { _method: post, id:  \d+ }
+
+act_resource_project_shift:
+    pattern:  /{id}/shift
+    defaults: { _controller: "ActResourceBundle:Project:shift" }
+    requirements: { _method: post, id:  \d+ }
+
+act_resource_project_tasks:
+    pattern:  /{id}/tasks
+    defaults: { _controller: "ActResourceBundle:Project:tasks" }
+    requirements: { id:  \d+ }
+
+act_resource_project_add_task:
+    pattern:  /{id}/addtask
+    defaults: { _controller: "ActResourceBundle:Project:addtask" }
+    requirements: { _method: post, id:  \d+ }
+
+act_resource_project_get_tasks:
+    pattern:  /{id}/gettasks.{_format}
+    defaults: { _controller: "ActResourceBundle:Project:getTasks", _format: json}
+    requirements:
+      _method:  GET
+      _format: JSON
+
+act_resource_project_prefered_teams:
+    pattern:  /{id}/prefered-teams
+    defaults: { _controller: "ActResourceBundle:Project:preferedTeams" }
+    requirements: { id:  \d+ }
+
+act_resource_project_find_by_name:
+    pattern:  /find/{name}
+    defaults: { _controller: "ActResourceBundle:Project:findByName", name: null}
+    requirements:
+      _method:  GET
+    options:
+      expose: true
+
+act_resource_project_save_sortable:
+    pattern:  /{id}/save-tasks
+    defaults: { _controller: "ActResourceBundle:Project:saveTaskSortable" }
+    requirements: { id:  \d+ }
+
+act_resource_project_disable:
+  pattern: /{id}/disable
+  defaults: { _controller:"ActResourceBundle:Project:disableProject"}
+  requirements: { id:  \d+ }
+
+act_resource_project_details:
+  pattern: /{id}/details
+  defaults: { _controller:"ActResourceBundle:Project:detailsProject", id: null}
+  requirements: { id:  \d+ }

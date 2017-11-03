@@ -1,0 +1,105 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ "schedule"|trans }} : {{ project }} - {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+        'libs/jquery-ui/jquery-ui.min.css'
+        'libs/jquery-ui/jquery-ui.structure.min.css'
+        'libs/jquery-ui/jquery-ui.theme.min.css'
+        'handsontable/dist/jquery.handsontable.full.css'
+        'bundles/actresource/css/project_show.css'
+        'bundles/actresource/css/project_planning.css'
+     %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body_attributes %}id="planning-page"{% endblock%}
+
+{% block body_title_right %}
+    <div class="btn-group">
+        <a class="btn btn-primary" data-toggle="modal" href="#chooseDates"><i class="glyphicon glyphicon-zoom-in"></i> {{ "display.define"|trans }}</a>
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+
+        {% include 'ActResourceBundle:Project:links_dropdown.html.twig' with {'project': project, 'advanced': true} %}
+    </div>
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "schedule"|trans }} : {{ project }}
+{% endblock %}
+
+{% block body_content %}
+
+    <div id="planning">
+        {% for planning in manager.getPlannings() %}
+            <div class="planning displayed-team" id="team-{{ planning.team.id }}" style="background-color: rgba({{ planning.team.color|rgbColor }}, 0.1);">
+                {% include 'ActResourceBundle:RPProject:onlyheader.html.twig' with {'planning': planning, 'type': 'team', 'ajax': false} %}
+
+                <div id="planning-{{planning.team.id}}" class="planning-table-container planning-content">
+                    <!-- Contenu du planning -->
+                </div>
+
+                <div class="hidden planning-data">
+                    <span class="planning-data-project-id">{{ planning.project.id }}</span>
+                    <span class="planning-data-team-id">{{ planning.team.id }}</span>
+                </div>
+
+                {% include 'ActResourceBundle:RPProject:tasks.html.twig' with {'manager': manager, 'planning': planning} %}
+
+                <div class="popover-pool"></div>
+            </div>
+        {% endfor %}
+
+        {% for planning in manager.getUnloadedTeamsPlannings() %}
+            <div id="team-{{ planning.team.id }}" class="planning" style="background-color: rgba({{ planning.team.color|rgbColor }}, 0.1);">
+                {% include 'ActResourceBundle:RPProject:onlyheader.html.twig' with {'planning': planning, 'type': 'team', 'ajax': true} %}
+
+                <div id="planning-{{planning.team.id}}" class="planning-table-container planning-content" style="display:none;">
+                    <!-- Contenu du planning -->
+                </div>
+
+                <div class="hidden planning-data">
+                    <span class="planning-data-project-id">{{ planning.project.id }}</span>
+                    <span class="planning-data-team-id">{{ planning.team.id }}</span>
+                </div>
+
+                <div class="popover-pool"></div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% include 'ActResourceBundle:Project:define_display_modal.html.twig' with {'manager': manager, 'project': project, 'path': path('act_resource_project_planning_show', {'id': project.id}), 'route': 'act_resource_project_planning_show' } %}
+    {% include 'ActResourceBundle:RPProject:saveModal.html.twig' %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.js'
+        'libs/js/stickyheader.jquery.js'
+        'handsontable/dist/jquery.handsontable.full.js'
+        'bundles/actresource/js/project_planning.js'
+        'bundles/actresource/js/project.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        var hide = {% if manager.getHide() %}1{% else %}0{% endif %};
+        var start = '{{ manager.getStart()|date('d/m/Y') }}';
+        var end = '{{ manager.getEnd()|date('d/m/Y') }}';
+
+        {% for planning in manager.getPlannings() %}
+            {% if planning.team is defined and planning.team != null %}
+                createExcelTable('#planning-{{planning.team.id}}', {{ planning.getAllData()|raw }});
+            {% endif %}
+        {% endfor %}
+    </script>
+{% endblock %}

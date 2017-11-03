@@ -1,0 +1,41 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ "first.login"|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div style="margin: 0 20px 0 20px;">
+    <h2>{{ "welcome"|trans }}, {{ app.user }}</h2>
+    <p>{{ "account.unlinked"|trans }}</p>
+    <p>{{ "account.unlinked2"|trans }}</p>
+
+    {% if resources|length > 0 %}
+        <hr/>
+        <form class="form-horizontal" id="linkresource" name="linkresource" method="post" action="{{ path('act_resource_user_first_login') }}">
+            <div class="form-group">
+                <label for="resource" class="col-sm-1 control-label">{{ "you.are"|trans }}</label>
+                <div class="col-sm-4">
+                    <select id="resource" name="resource" class="form-control">
+                        {% for resource in resources %}
+                            <option value="{{resource.id}}" {% if app.user.compare(resource) %}selected=""{% endif %}>{{ resource.name }} ({{ resource.nameshort}})</option>
+                        {% endfor %}
+                    </select>
+                    <p class="help-block"><i class="glyphicon glyphicon-question-sign"></i><b> {{ "you.are.not.in.this.list"|trans }}</b><br/>{{ "please.contact.a.manager"|trans }}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-10">
+                    <button class="btn btn-primary" type="submit">{{ "validate"|trans }}</button>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div class="well bold">
+            {{ "no.resource.available"|trans }}
+            {{ "please.contact.a.manager"|trans }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

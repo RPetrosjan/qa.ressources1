@@ -1,0 +1,36 @@
+{% extends '::layout.html.twig' %}
+
+{% block title %}Page introuvable - {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        #page-alerts {
+            padding: 0;
+        }
+
+        .jumbotron {
+            text-align: center;
+        }
+
+        .jumbotron h1 span {
+            vertical-align: top;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1>
+                <span class="text-warning">
+                    <span class="glyphicon glyphicon-question-sign"></span>
+                    Page introuvable
+                </span>
+            </h1>
+
+            <p>
+                la page que vous recherchez n'a jamais existé, ou alors elle n'existe plus.
+            </p>
+        </div>
+    </div>
+{% endblock %}

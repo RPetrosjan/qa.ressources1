@@ -1,0 +1,11 @@
+{#
+  Add by Ruben 26/10/2017
+    Active only with ProjectAdmin.php
+    //src/Act/Ressourcebundle/Admin/ProjectAdmin.php
+
+#}
+{% extends 'SonataAdminBundle:CRUD:base_edit.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/actresource/js/project_create.js?ruen12') }}" type="text/javascript"></script>
+{% endblock %}

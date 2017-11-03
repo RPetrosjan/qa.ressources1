@@ -1,0 +1,63 @@
+{% extends '::sonata_standard_layout.html.twig' %}
+
+{% block sonata_admin_content %}
+
+    {% block notice %}
+        {% include 'SonataCoreBundle:FlashMessage:render.html.twig' %}
+    {% endblock notice %}
+
+    <div class="page-header">
+        <h1>{{ "import"|trans }} <small>{{ "bankholidays"|trans }}</small></h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Formulaire d'import</h3>
+        </div>
+        <div class="panel-body">
+            <form action="{{ path('admin_act_resource_bankholiday_import') }}" method="post" {{ form_enctype(form) }} role="form">
+                <div class="form-group">
+                    {{ form_label(form.attachment) }}
+                    {{ form_errors(form.attachment) }}
+                    {{ form_widget(form.attachment) }}
+                    {{ form_widget(form) }}
+                    <p class="help-block"><span class="glyphicon glyphicon-import"></span> {{ "import.excel.file"|trans }}</p>
+                </div>
+
+                <button type="submit" class="btn btn-default">{{ "to.import"|trans }}</button>
+            </form>
+
+            <p class="text-center">
+                <span class="glyphicon glyphicon-info-sign"></span> {{ "import.model.to.follow"|trans }}<br/>
+                {{ "import.column.order"|trans }}
+            </p>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>{{ "date"|trans }}</th>
+                <th>{{ "name"|trans }}</th>
+                <th>{{ "locations"|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    {{ "import.date.any.format"|trans }}
+                </td>
+                <td>
+                    Nom du jour férié
+                </td>
+                <td>
+                    <p>
+                        Lieux du jour férié, séparés par ";"<br/>
+                        Si le lieu n'existe pas, il sera créé<br/>
+                        Insensible à la casse
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

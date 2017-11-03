@@ -1,0 +1,36 @@
+act_resource_user_own_profile:
+    pattern:  /profile
+    defaults: { _controller: "ActResourceBundle:User:myProfile" }
+
+act_resource_user_own_profile_save:
+    pattern:  /profile/save
+    defaults: { _controller: "ActResourceBundle:User:saveMyProfile" }
+    requirements: { _method: post }
+
+act_resource_user_prefered_projects_save:
+    pattern:  /profile/projects/save
+    defaults: { _controller: "ActResourceBundle:User:savePreferedProjects" }
+    requirements: { _method: post }
+    options:
+        expose: true
+
+act_resource_user_prefered_project_add:
+    pattern:  /project/{id}/add-to-prefered
+    defaults: { _controller: "ActResourceBundle:User:preferedProjectAdd" }
+    options:
+        expose: true
+
+act_resource_user_previsional_email_save:
+    pattern:  /profile/previsional-email-settings/save
+    defaults: { _controller: "ActResourceBundle:User:savePrevisionalEmailSettings" }
+    requirements: { _method: post }
+
+act_resource_user_first_login:
+    pattern:  /first-login
+    defaults: { _controller: "ActResourceBundle:User:firstLogin" }
+
+act_resource_user_ajax_list:
+   pattern: /act_resource_user_ajax_list
+   defaults: { _controller:"ActResourceBundle:User:ajaxUserList"}
+   options:
+        expose: true

@@ -1,0 +1,9 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+    <div class="project-name-field">
+        <div class="project-name">{{ value }}</div>
+        {% if object.client != null %}<div class="project-client"><span>{{ 'client'|trans }}:</span> {{ object.client }}</div>{% endif %}
+        {% if object.cpf != null %}<div class="project-cpf"><span>{{ 'cpf'|trans }}:</span> {{ object.cpf }}</div>{% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+act_resource_ressource:
+    pattern:  /
+    defaults: { _controller: "ActResourceBundle:Ressource:index" }
+
+act_resource_ressource_new:
+    pattern:  /new
+    defaults: { _controller: "ActResourceBundle:Ressource:new" }
+
+act_resource_ressource_create:
+    pattern:  /create
+    defaults: { _controller: "ActResourceBundle:Ressource:create" }
+    requirements: { _method: post }
+
+act_resource_ressource_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "ActResourceBundle:Ressource:edit" }
+    requirements: { id:  \d+ }
+
+act_resource_ressource_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "ActResourceBundle:Ressource:update" }
+    requirements: { _method: post, id:  \d+ }
+
+act_resource_ressource_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "ActResourceBundle:Ressource:delete" }
+    requirements: { _method: post, id:  \d+ }
+
+act_resource_ressource_get_infos:
+    pattern:  /getinfos
+    defaults: { _controller: "ActResourceBundle:Ressource:getInfos"}
+    options:
+        expose: true
+
+act_resource_ressource_get_infos_simple:
+    pattern:  /getinfossimple
+    defaults: { _controller: "ActResourceBundle:Ressource:getInfosSimple"}
+    options:
+        expose: true
+
+act_resource_ressource_get_week_assignments:
+    pattern:  /getweekassignments
+    defaults: { _controller: "ActResourceBundle:Ressource:getWeekAssignments"}
+
+act_resource_ressource_get_assignments:
+    pattern:  /assignments/{ressource}/{project}
+    defaults: { _controller: "ActResourceBundle:Ressource:getAssignments"}
+    options:
+        expose: true

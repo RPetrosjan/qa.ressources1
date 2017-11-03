@@ -1,0 +1,52 @@
+<table id="week-projects" class="table table-bordered table-condensed table-striped">
+    <thead>
+        <tr>
+            <th class="project-name">
+                {{ 'project'|trans }}
+            </th>
+
+            <th class="project-workload">
+                {{ 'workload'|trans }}
+            </th>
+
+            <th class="project-resources">
+                {{ 'resources'|trans }}
+            </th>
+
+            <th class="project-actions actions">
+                {{ 'actions'|trans }}
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for project in projects %}
+        <tr>
+            <td class="body-project-label" style="background-color:rgba({{ project.color|rgbColor }}, 0.5) !important;">
+                <a href="{{ path('act_resource_project_show', {'id' : project.id }) }}" title="{{ project.name }}">
+                    {{ project.name }}
+                </a>
+            </td>
+
+            <td class="project-workload">
+                {{ project.total }} {{ 'day(s)'|trans }} <br/>
+                {{ 'nearly'|trans }} {{ project.total|workloadFormat }}
+            </td>
+
+            <td class="project-resources">
+                {% for resource in project.resources %}
+                    <div>{{ resource }} (<span style="color: {{ resource.team.color }};">{{ resource.team }}</span>)</div>
+                {% endfor %}
+            </td>
+
+            <td class="project-actions actions">
+                <span class="btn btn-default project-button">
+                    <i class="glyphicon glyphicon-chevron-down"></i>
+                    <input type="hidden" value="{{ project.id }}" />
+                    {{ 'details'|trans }}
+                </span>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

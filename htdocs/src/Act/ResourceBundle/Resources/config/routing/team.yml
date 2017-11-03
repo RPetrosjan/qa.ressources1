@@ -1,0 +1,10 @@
+act_resource_team_projects:
+    pattern:  /{id}/projects
+    defaults: { _controller: "ActResourceBundle:Team:projects"}
+
+act_resource_team_plannings:
+    pattern: /{id}/plannings
+    defaults: { _controller: "ActResourceBundle:Planning:showTeam" }
+    requirements: { id:  \d+ }
+    options:
+        expose: true

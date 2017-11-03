@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html {% block html_attributes %}lang="{{ app.request.locale }}"{% endblock %}>
+    <head>
+        {% block meta_tags %}
+            <meta charset="UTF-8">
+            <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+            <meta name="description" content="{{ "site.description"|trans }}">
+        {% endblock %}
+
+        <title>{% block title %}{{ "site.title"|trans }}{% endblock %}</title>
+
+        <!-- Main styles -->
+        {% stylesheets output='css/main.css' filter='cssrewrite'
+            'libs/bootstrap/css/bootstrap.min.css'
+            'bundles/actmain/css/main.css'
+         %}
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        
+        <!-- Print styles -->
+        {% stylesheets output='css/print.css'
+            'bundles/actmain/css/print.css'
+         %}
+            <link rel="stylesheet" type="text/css" media="print" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+        {% block stylesheets %}{% endblock %}
+        {% block head_javascripts %}{% endblock %}
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="{{ asset('libs/js/html5shim.js') }}"></script>
+        <![endif]-->
+
+        <!-- Le fav icon -->
+        <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" />
+    </head>
+
+    <body {% block body_attributes %}class="{% block body_classes %}{% if app.user %}user-logged{% endif %}{% endblock %}" id="{{ app.request.attributes.get('_route') }}"{% endblock %}>
+        {% block menu %}
+            {% include ':Parts:menu.html.twig' with {'logo': 'bundles/actresource/img/ActRessources_40.png'} %}
+        {% endblock %}
+
+        {% block messages %}
+            {# On gère les messages flash de façon global pour tout le bundle #}
+            {% include ':Parts:messages.html.twig' %}
+        {% endblock %}
+
+        <section id="block_body">
+            {% block body %}
+
+                {% block body_title %}
+                    <div id="page-title" class="container-fluid">
+                        <div id="page-title-inner" class="row">
+                            <div class="col-md-3 body-title-left clearfix">
+                                {% block body_title_left %}
+                                    <a class="btn btn-default" href="{% if referer is defined %}{{ referer }}{% else %}javascript:window.history.back(){% endif %}">
+                                        <i class="glyphicon glyphicon-chevron-left"></i>
+                                        {{ "back"|trans }}
+                                    </a>
+                                {% endblock %}
+                            </div>
+
+                            <div class="col-md-6 body-title-text clearfix">
+                                <h1>
+                                    {% block body_title_text %}
+                                        {{ "site.title"|trans }}
+                                    {% endblock %}
+                                </h1>
+                            </div>
+
+                            <div class="col-md-3 body-title-right clearfix">
+                                {% block body_title_right %}
+
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                    <hr id="page-hr">
+                {% endblock %}
+
+                {% block body_content %}
+
+                {% endblock %}
+
+            {% endblock %}
+        </section>
+
+        <footer id="page-footer" class="clearfix">
+            <p>{{ "site.title"|trans }} &copy; {{ "now"|date("Y") }} - Version {{ version }}</p>
+        </footer>
+
+
+        <!-- Javascript - placed at the end of the document so the pages load faster -->
+        <script type="text/javascript">
+            /** variables utiles **/
+            var isRP = {% if app.user != null and is_granted('ROLE_RP') %}true{% else %}false{% endif %};
+        </script>
+
+        {% javascripts output='js/main.js'
+            'libs/jquery/jquery.min.js'
+            'libs/bootstrap/js/bootstrap.min.js'
+            'libs/js/modernizr.js'
+            'bundles/fosjsrouting/js/router.js'
+            'bundles/bazingajstranslation/js/translator.min.js'
+            'bundles/actmain/js/main.js'
+         %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+        <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        <script type="text/javascript" src="{{ url('bazinga_jstranslation_js') }}"></script>
+
+        {% if app.user != null and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+            <script type="text/javascript" src="{{ asset('bundles/actmain/js/impersonate.js') }}"></script>
+        {% endif %}
+
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

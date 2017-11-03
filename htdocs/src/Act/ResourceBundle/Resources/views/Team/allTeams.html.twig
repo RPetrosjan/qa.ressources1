@@ -1,0 +1,11 @@
+<li class="dropdown" id="teams-dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ "teams"|trans }} <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        <li><a href="{{ path('admin_act_resource_team_list', {'_locale': trueLocale}) }}">{{ "team.list"|trans }}</a></li>
+        <li class="divider"></li>
+
+        {% for team in teams %}
+        <li class="team team-{{ team.id }}"><a href="{{ path('act_resource_team_projects', {'id' : team.id, '_locale': trueLocale }) }}"><span class="team-color" style="background-color:{{team.color}};"></span> {{ team.name }}</a></li>
+        {% endfor %}
+    </ul>
+</li>

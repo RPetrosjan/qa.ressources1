@@ -1,0 +1,238 @@
+{% extends 'ActResourceBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ "dashboard"|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block body_attributes %}id="various-summary"{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter="cssrewrite"
+        'libs/jquery-ui/jquery-ui.min.css'
+        'libs/jquery-ui/jquery-ui.structure.min.css'
+        'libs/jquery-ui/jquery-ui.theme.min.css'
+        'bundles/actresource/css/various_summary.css'
+     %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body_title_right %}
+<div class="inner">
+    <form class="form-inline" method="GET">
+        <div class="form-group">
+            {{'from'|trans}} : <input  type="text" class="form-control"  name="start" id="start" value="{{start|date('d/m/Y')}}"/>
+            {{'to'|trans}} <input  type="text" class="form-control" name="end" id="end" value="{{end|date('d/m/Y')}}"/>
+        </div>
+        <button id="sumbit-period" name="submit-period" class="btn btn-info"><i class="glyphicon glyphicon-ok"></i></button>
+    </form>
+</div>
+{% endblock %}
+
+{% block body_title_text %}
+    {{ "dashboard"|trans }}
+{% endblock %}
+
+{% block body_content %}
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3><i class="glyphicon glyphicon-plus"></i> {{'projects.active'|trans}}  <i class="glyphicon glyphicon-question-sign help-popover" data-title="{{ "help"|trans }}"data-content="{{ "summary.active.project"|trans }}"></i></h3>
+            </div>
+            <div class="col-md-6 resp-right">
+                <h3>{{activeProjects|length}} {{'projects.active'|trans}}</h3>
+            </div>
+        </div>
+
+
+        <table class="table table-striped table-condensed" id="activeProject" style="display:none;">
+            {% for project in activeProjects %}
+                <tr>
+                    <td>
+                        <span class="project-color" style="background-color:{{ project.color }};"></span>
+                        <span class="project-name">{{ project.name }}</span>
+                    </td>
+
+                    <td>
+                        <span class="digit">{{ project.assignments }}</span> {{ 'assignments'|trans }}
+                    </td>
+
+                    <td>
+                        <span class="digit">{{ project.tasks }}</span> {{ 'tasks'|trans }}
+                    </td>
+
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-primary btn-sm" href="{{ path('act_resource_project_show',{'id' : project.id, 'start': start|date('d/m/Y'), 'end': end|date('d/m/Y')}) }}">
+                                <i class="glyphicon glyphicon-zoom-in"></i> {{ 'see'|trans }}
+                            </a>
+                            <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="{{ path('admin_act_resource_project_edit',{'id' : project.id}) }}">
+                                        <i class="glyphicon glyphicon-edit"></i> {{ 'edit'|trans }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('admin_act_resource_project_delete',{'id' : project.id}) }}">
+                                        <i class="glyphicon glyphicon-trash"></i> {{ 'delete'|trans }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="row">
+            <div class="col-md-6">
+                <h3><i class="glyphicon glyphicon-plus"></i> {{'resource.active'|trans}} <i class="glyphicon glyphicon-question-sign help-popover" data-title="{{ "help"|trans }}"data-content="{{ "summary.active.resource"|trans }}"></i></h3>
+            </div>
+            <div class="col-md-6 resp-right">
+                <h3>{{activeResources|length}} {{'resource.active'|trans}} </h3>
+            </div>
+        </div>
+
+        <table class="table table-striped table-condensed" id="activeResources" style="display:none;">
+            {% for resource in activeResources %}
+                <tr>
+                    <td>{{ resource.name }}</td>
+
+                    <td>
+                        <span class="digit">{{ resource.assignments }}</span> {{ 'assignments'|trans }}
+                    </td>
+
+                    <td>
+                        <span class="digit">{{ resource.workload }}</span> {{ 'days.assigned'|trans }}
+                    </td>
+
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-primary btn-sm" href="{{ path('admin_act_resource_resource_edit',{'id': resource.id}) }}">
+                                <i class="glyphicon glyphicon-edit"></i> {{ 'edit'|trans }}
+                            </a>
+                            <a class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="{{ path('admin_act_resource_resource_delete',{'id': resource.id}) }}">
+                                        <i class="glyphicon glyphicon-trash"></i> {{ 'delete'|trans }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3><i class="glyphicon glyphicon-plus"></i> {{'project.idle'|trans}} <i class="glyphicon glyphicon-question-sign help-popover" data-title="{{ "help"|trans }}"data-content="{{ "summary.idle.project"|trans }}"></i></h3>
+            </div>
+            <div class="col-md-6 resp-right">
+                <h3>{{sleepingProjects|length}} {{'project.idle'|trans}}</h3>
+            </div>
+        </div>
+
+        <table class="table table-striped table-condensed" id="sleepingProjects" style="display:none;">
+        {% for project in sleepingProjects %}
+            <tr>
+                <td><span class="project-color" style="background-color:{{project.color}};"></span> <span class="project-name">{{project.name}}</span></td>
+                <td>
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-primary btn-sm"  href="{{path('act_resource_project_disable',{'id': project.id})}}"><i class="glyphicon glyphicon-adjust"></i> {{'disable'|trans}}</a>
+                        <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{path('admin_act_resource_project_delete',{'id': project.id})}}"><i class="glyphicon glyphicon-trash"></i> {{'delete'|trans}}</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3><i class="glyphicon glyphicon-plus"></i> {{'resource.idle'|trans}} <i class="glyphicon glyphicon-question-sign help-popover" data-title="{{ "help"|trans }}"data-content="{{ "summary.idle.resource"|trans }}"></i></h3>
+            </div>
+            <div class="col-md-6 resp-right">
+                <h3>{{sleepingResources|length}} {{'resource.idle'|trans}}</h3>
+            </div>
+        </div>
+
+        <table class="table table-striped table-condensed" id="sleepingResources" style="display:none;">
+        {% for resource in sleepingResources %}
+            <tr>
+                <td>{{resource.name}}</td>
+                <td>
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-primary btn-sm" href="{{path('admin_act_resource_resource_edit',{'id': resource.id})}}"><i class="glyphicon glyphicon-edit"></i> {{'edit'|trans}}</a>
+                        <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{path('admin_act_resource_resource_delete',{'id': resource.id})}}"><i class="glyphicon glyphicon-trash"></i> {{'delete'|trans}}</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3><i class="glyphicon glyphicon-plus"></i> {{"running.projects.disabled"|trans}} <i class="glyphicon glyphicon-question-sign help-popover" data-title="{{ "help"|trans }}" data-content="{{ "summary.running.project.disabled"|trans }}"></i></h3>
+            </div>
+            <div class="col-md-6 resp-right">
+                <h3>{{inactiveProjects|length}} {{"running.projects.disabled"|trans}}</h3>
+            </div>
+        </div>
+
+
+        <table class="table table-striped table-condensed" id="inactiveProjects" style="display:none;">
+            {% for project in inactiveProjects %}
+                <tr>
+                    <td><span class="project-color" style="background-color:{{ project.color }};"></span> <span class="project-name">{{ project.name }}</span></td>
+                    <td><span class="digit">{{ project.assignments }}</span> {{ 'assignments'|trans }}</td>
+                    <td><span class="digit">{{ project.tasks }}</span> {{ 'tasks'|trans }}</td>
+                    <td>
+                        <a href="{{ path('act_resource_project_planning_show',{'id' : project.id}) }}" class="btn btn-info pull-right">
+                            <i class="glyphicon glyphicon-zoom-in"></i> {{ 'see'|trans }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.js'
+     %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    <script type="text/javascript">
+
+    	$('#start').datepicker({
+    		dateFormat: 'dd/mm/yy'
+    	});
+
+    	$('#end').datepicker({
+    		dateFormat: 'dd/mm/yy'
+    	});
+
+        $('h3').click(function() {
+            $(this).parent().parent().next().toggle();
+
+            if($(this).find('i:first').attr('class') == 'glyphicon glyphicon-minus') {
+                $(this).find('i:first').attr('class','glyphicon glyphicon-plus');
+            } else {
+                $(this).find('i:first').attr('class','glyphicon glyphicon-minus');
+            }
+        });
+    </script>
+    {% endjavascripts %}
+{% endblock %}

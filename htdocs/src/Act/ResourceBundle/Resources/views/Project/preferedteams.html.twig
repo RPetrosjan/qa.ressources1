@@ -1,0 +1,103 @@
+{% extends "ActResourceBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ "your.prefered.teams"|trans }} : {{ project }} - {{ parent() }}
+{% endblock %}
+
+{% block body_attributes %}id="project-prefered-teams"{% endblock%}
+
+{% block body_title_text %}
+    {{ project }} : {{ "your.prefered.teams"|trans }}
+    <i class="glyphicon glyphicon-question-sign help-popover" data-content="{{ "your.prefered.teams.help"|trans|raw }}"></i>
+{% endblock %}
+
+{% block body_content %}
+    <form name="project_prefered_teams" method="post" action="{{ path('act_resource_project_prefered_teams', {'id': project.id}) }}" class="form-horizontal">
+        <input type="hidden" name="referer" value="{{ referer }}">
+
+        {% for preferedTeam in preferedTeams %}
+        <div class="form-group prefTeam">
+            <div class="col-sm-offset-4 col-sm-3">
+                <input class="teamId" type="hidden" name="teams[]" value="{{ preferedTeam.team.id }}">
+                <input type="text" value="{{ preferedTeam.team }}"  class="teamName form-control uneditable-input" disabled>
+            </div>
+            <div class="col-sm-1">
+                <a class="btn btn-danger removePrefTeam"><i class="glyphicon glyphicon-minus-sign"></i></a>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-3">
+                <select id="teamselector" name="not_choosen_teams" class="form-control">
+                    <option value="">{{ "prefered.team.add"|trans }}</option>
+                    {% for team in teams %}
+                        {% set notPresent = true %}
+                        {% for preferedTeam in preferedTeams %}
+                            {% if preferedTeam.team == team %}
+                                {% set notPresent = false %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if notPresent == true %}
+                            <option value="{{ team.id }}">{{ team }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-3">
+                <button class="btn btn-primary" type="submit">{{ "validate"|trans }}</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'libs/jquery-ui/jquery-ui.js'
+     %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        function addPrefTeam(id, name)
+        {
+            var html = '<div class="form-group prefTeam">';
+            html += '<div class="col-sm-offset-4 col-sm-3">';
+            html += '<input class="teamId" type="hidden" name="teams[]" value="'+id+'">';
+            html += '<input type="text" value="'+name+'"  class="teamName form-control uneditable-input" disabled>';
+            html += '</div>';
+            html += '<div class="col-sm-1">';
+            html += '<a class="btn btn-danger removePrefTeam"><i class="glyphicon glyphicon-minus-sign"></i></a>';
+            html += '</div>';
+            html += '</div>';
+
+            $(html).insertBefore($('select#teamselector').parents('div.form-group'));
+        }
+
+        $(document).ready(function(){
+            $('a.removePrefTeam').on('click', function(){
+                var id = $(this).parents('div').find('input.teamId').val();
+                var name = $(this).parents('div').find('input.teamName').val();
+
+                $(this).parents('div.prefTeam').remove();
+
+                $('select#teamselector').append('<option value="'+id+'">'+name+'</option>');
+            });
+
+            $('select#teamselector').change(function(){
+                var id = $(this).find('option:selected').val();
+                var name = $(this).find('option:selected').html();
+
+                if(id != null && id != '')
+                {
+                    addPrefTeam(id, name);
+                    $(this).find('option:selected').remove();
+                }
+            });
+        });
+    </script>
+{% endblock %}

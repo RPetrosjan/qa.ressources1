@@ -1,0 +1,12 @@
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list: #default sonata admin block
+            contexts: [admin]
+        sonata.admin.block.search_result:
+            contexts: [admin]
+        sonata.block.service.text:
+        sonata.block.service.action:
+        sonata.block.service.rss:
+        sonata.user.block.menu:
+        sonata.user.block.account:

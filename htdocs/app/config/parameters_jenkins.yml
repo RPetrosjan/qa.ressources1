@@ -1,0 +1,17 @@
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: ressources_jenkins
+    database_user: root
+    database_password: testenv
+    mailer_from: actressource@actency.fr
+    dev_mail: quentin.fahrner@actency.fr
+    secret: 663d6eac661cbe6175605c6a5195cfbc697e4a53
+    locale: fr
+    host: 192.168.10.211/Symfony_projects/ActRessources/web
+    ldap_server: 192.168.10.190
+    ldap_port: 389
+    ldap_login_prefix: Actency\
+    ldap_base_dn: OU=SBSUsers,OU=Users,OU=MyBusiness,DC=actency,DC=local
+    ldap_user_field: sAMAccountName
