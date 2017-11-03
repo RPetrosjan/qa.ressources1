@@ -90,7 +90,6 @@ class RestController extends ContainerAware
         $nomproject = urlencode($nomproject);
         $url = 'https://actency.my.alibeez.com/api/query/sales/contracts?key=5139a3aae1414da19a9c556e88f28def&fields=number,customerName,operationalManagerUsername,closed,startDate,closingDate,sendDate&filter=name%3D%3D'.$nomproject;
 
-
         //Recuperation du contenu du URL
         $result = file_get_contents($url, false, stream_context_create(array(
             'http' => array(
@@ -99,7 +98,7 @@ class RestController extends ContainerAware
             )
         )));
 
-
+        //Master Version
 
         //Mettre en Array
         $reponseArrayProject =  json_decode($result,true);
