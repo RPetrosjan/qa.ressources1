@@ -90,6 +90,7 @@ class RestController extends ContainerAware
         $nomproject = urlencode($nomproject);
         $url = 'https://actency.my.alibeez.com/api/query/sales/contracts?key=5139a3aae1414da19a9c556e88f28def&fields=number,customerName,operationalManagerUsername,closed,startDate,closingDate,sendDate&filter=name%3D%3D'.$nomproject;
 
+        // here ist tehe same code where i will add to the Branch 03-11-2017
 
         //Recuperation du contenu du URL
         $result = file_get_contents($url, false, stream_context_create(array(
