@@ -70,14 +70,6 @@ class Project
      */
     private $typePresaleGT70;
 
-
-    /**
-     * @var boolean $project_signee bollean variable for indication signed Project (yes/no) ?
-     *
-     * @ORM\Column(name="project_signee", type="boolean")
-     */
-    private $project_signee;
-
     /**
      * @var boolean $typePresaleLT70 is the project a presale with lower chances than 70% ?
      *
@@ -1043,11 +1035,6 @@ class Project
         return $this->typePresaleGT70;
     }
 
-    public function isProjectSignee()
-    {
-        return $this->project_signee;
-    }
-
     public function isTypePresaleLT70()
     {
         return $this->typePresaleLT70;
@@ -1076,11 +1063,6 @@ class Project
     public function setTypePresaleGT70($value)
     {
         $this->typePresaleGT70 = $value;
-    }
-
-    public function setProjectSignee($value)
-    {
-        $this->project_signee = $value;
     }
 
     public function setTypePresaleLT70($value)

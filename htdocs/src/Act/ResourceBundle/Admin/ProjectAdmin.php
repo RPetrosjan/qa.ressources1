@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Act\ResourceBundle\Entity\Alibbez;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Form\FormError;
 
 
 class ProjectAdmin extends Admin
@@ -65,6 +66,28 @@ class ProjectAdmin extends Admin
 
             //Recuperation des data(s) du formumlaire
             $data = $event->getData();
+            $element = $event->getForm();
+
+            /*throw new \LogicException(
+                'The FriendMessageFormType cannot be used without an authenticated user!'
+            ); */
+
+
+
+            $active = $element->get('active');
+            $typePresaleGT70 = $element->get('typePresaleGT70');
+            $typePresaleLT70 = $element->get('typePresaleLT70');
+            $typeHoliday = $element->get('typeHoliday');
+            $typeInternal = $element->get('typeInternal');
+            $typeResearch = $element->get('typeResearch');
+
+            if(!isset($data['active']) && !isset($data['typePresaleGT70']) && !isset($data['typePresaleLT70']) && !isset($data['typeHoliday']) && !isset($data['typeInternal']) && !isset($data['typeResearch']))
+            {
+                $element->addError(new FormError('Choisissez un minimum option "Option Project"'));
+            }
+
+///        $element->get('nameShort')->addError(new FormError('Vous devez choisire min une check box du Option Project'));
+///            $data['typePresaleGT70']->addError(new FormError('Vous devez choisire min une check box du Option Project'));
 
             //Si le valeur clint exist
             if(isset($data['client']))
@@ -92,100 +115,105 @@ class ProjectAdmin extends Admin
 
             //Ajoutee par Ruben 25/10/2017
             // sonata_type_choice_field_mask permet de faire cacher / affisher les fields en ligne
-            ->add('project_signee', 'sonata_type_choice_field_mask', array(
-                'label' => $this->translator->trans("project.signed").' ?',
-                'placeholder' => $this->translator->trans("choose.answer"),
-                'choices' => array(1 => $this->translator->trans("yes"),0 => $this->translator->trans("no")),
-                /// Mappging pour definir les fields affisher par Yes/No
-                'map' => array(
-                    1 => array('name_alibeez'),
-                    0 => array('name'),
-                ),
-                'attr' => array('id','alibez_list'),
-            ))
-
-            ->add('name_alibeez','choice', array(
-                'mapped' => false,
-                'choices' => Alibbez::getAlibbezProjects(),
-                'label' => $this->translator->trans("name"),
+            ->with('Definition d\'un Project')
+                ->add('typeSigned', 'sonata_type_choice_field_mask', array(
+                    'label' => $this->translator->trans("project.signed").' ?',
+                    'placeholder' => $this->translator->trans("choose.answer"),
+                    'choices' => array(1 => $this->translator->trans("yes"),0 => $this->translator->trans("no")),
+                    /// Mappging pour definir les fields affisher par Yes/No
+                    'map' => array(
+                        1 => array('name_alibeez'),
+                        0 => array('name'),
+                    ),
+                    'attr' => array('id','alibez_list'),
                 ))
 
-            ->add('name', 'text', array(
-                'label' => $this->translator->trans("name"),
-               /// 'attr' => array('value'=>'Ruben'),
-            ))
-            ->add('nameShort', 'text', array(
-                'label' => $this->translator->trans("name.short")
-            ))
-            ->add('clientShort_alibeez', 'hidden', array(
-                'required' => false,
-                'mapped' => false,
-            ))
-            ->add('client', 'entity', array(
-                'label' => $this->translator->trans("client"),
-                'class' => 'Act\ResourceBundle\Entity\Client',
-                'required' => false
-            ))
-            ->add('client_alibeez', 'hidden', array(
-                'required' => false,
-                'mapped' => false,
-            ))
-            ->add('start', null, array(
-                'label' => $this->translator->trans("date.start"),
-                'widget' => 'single_text',
-                'required' => true,
-                'format' => 'dd/MM/yyyy',
-                'attr' => array(
-                    'class' => 'datepicker start'
-                )
-            ))
-            ->add('end', null, array(
-                'label' => $this->translator->trans("date.end"),
-                'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy',
-                'required' => true,
-                'attr' => array(
-                    'class' => 'datepicker end'
-                )
-            ))
-            ->add('cpf', 'entity', array(
-                'label' => $this->translator->trans("cpf"),
-                'class' => 'Act\ResourceBundle\Entity\Resource',
-                'required' => false
-            ))
-            ->add('color', null, array(
-                'label' => $this->translator->trans("color"),
-                'required' => true,
-                'attr' => array('class' => 'colorpicker')
-            ))
-            ->add('active', null, array(
-                'label' => $this->translator->trans("activated?"),
-                'required' => false
-            ))
-            ->add('typePresaleGT70', null, array(
-                'label' => $this->translator->trans("project.type.presale.gt70"),
-                'required' => false
-            ))
-            ->add('typePresaleLT70', null, array(
-                'label' => $this->translator->trans("project.type.presale.lt70"),
-                'required' => false
-            ))
-            ->add('typeSigned', null, array(
-                'label' => $this->translator->trans("project.type.signed"),
-                'required' => false
-            ))
-            ->add('typeHoliday', null, array(
-                'label' => $this->translator->trans("project.type.holiday"),
-                'required' => false
-            ))
-            ->add('typeInternal', null, array(
-                'label' => $this->translator->trans("project.type.internal"),
-                'required' => false
-            ))
-            ->add('typeResearch', null, array(
-                'label' => $this->translator->trans("project.type.research"),
-                'required' => false
-            ))
+                ->add('name_alibeez','choice', array(
+                    'mapped' => false,
+                    'choices' => Alibbez::getAlibbezProjects(),
+                    'label' => $this->translator->trans("name"),
+                    ))
+
+                ->add('name', 'text', array(
+                    'label' => $this->translator->trans("name"),
+                   /// 'attr' => array('value'=>'Ruben'),
+                ))
+                ->add('nameShort', 'text', array(
+                    'label' => $this->translator->trans("name.short")
+                ))
+                ->add('clientShort_alibeez', 'hidden', array(
+                    'required' => false,
+                    'mapped' => false,
+                ))
+                ->add('client', 'entity', array(
+                    'label' => $this->translator->trans("client"),
+                    'class' => 'Act\ResourceBundle\Entity\Client',
+                    'required' => false
+                ))
+                ->add('client_alibeez', 'hidden', array(
+                    'required' => false,
+                    'mapped' => false,
+                ))
+                ->add('start', null, array(
+                    'label' => $this->translator->trans("date.start"),
+                    'widget' => 'single_text',
+                    'required' => true,
+                    'format' => 'dd/MM/yyyy',
+                    'attr' => array(
+                        'class' => 'datepicker start'
+                    )
+                ))
+                ->add('end', null, array(
+                    'label' => $this->translator->trans("date.end"),
+                    'widget' => 'single_text',
+                    'format' => 'dd/MM/yyyy',
+                    'required' => true,
+                    'attr' => array(
+                        'class' => 'datepicker end'
+                    )
+                ))
+                ->add('cpf', 'entity', array(
+                    'label' => $this->translator->trans("cpf"),
+                    'class' => 'Act\ResourceBundle\Entity\Resource',
+                    'required' => false
+                ))
+                ->add('color', null, array(
+                    'label' => $this->translator->trans("color"),
+                    'required' => true,
+                    'attr' => array('class' => 'colorpicker')
+                ))
+            ->end()
+
+            ->with('Option Project', array('collapsed' => true))
+                ->add('active', null, array(
+                    'label' => $this->translator->trans("activated?"),
+                    'required' => false
+                ))
+                ->add('typePresaleGT70', null, array(
+                    'label' => $this->translator->trans("project.type.presale.gt70"),
+                    'required' => false
+                ))
+                ->add('typePresaleLT70', null, array(
+                    'label' => $this->translator->trans("project.type.presale.lt70"),
+                    'required' => false
+                ))
+            /*    ->add('typeSigned', null, array(
+                    'label' => $this->translator->trans("project.type.signed"),
+                    'required' => false
+                )) */
+                ->add('typeHoliday', null, array(
+                    'label' => $this->translator->trans("project.type.holiday"),
+                    'required' => false
+                ))
+                ->add('typeInternal', null, array(
+                    'label' => $this->translator->trans("project.type.internal"),
+                    'required' => false
+                ))
+                ->add('typeResearch', null, array(
+                    'label' => $this->translator->trans("project.type.research"),
+                    'required' => false
+                ))
+            ->end()
         ;
 
        /* $formMapper->getFormBuilder()->addEventListener(FormEvents::PRE_SET_DATA,function (FormEvent $event) use ($formMapper){
@@ -215,8 +243,11 @@ class ProjectAdmin extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
+
             ->add('name')
-            ->add('project_signee')
+            ->add('typeSigned', null, array(
+                'label' => $this->translator->trans("project.type.signed")
+            ))
             ->add('nameShort', null, array(
                 'label' => $this->translator->trans("name.short")
             ))
@@ -224,6 +255,7 @@ class ProjectAdmin extends Admin
                 'label' => $this->translator->trans("client"),
                 'class' => 'Act\ResourceBundle\Entity\Client'
             ))
+
             ->add('start', 'doctrine_orm_date', array(
                     'label' => $this->translator->trans('date.start'),
                 ), 'date', array(
@@ -259,9 +291,7 @@ class ProjectAdmin extends Admin
             ->add('typePresaleLT70', null, array(
                 'label' => $this->translator->trans("project.type.presale.lt70")
             ))
-            ->add('typeSigned', null, array(
-                'label' => $this->translator->trans("project.type.signed")
-            ))
+
             ->add('typeHoliday', null, array(
                 'label' => $this->translator->trans("project.type.holiday")
             ))
@@ -277,22 +307,26 @@ class ProjectAdmin extends Admin
     // Fields to be shown on lists
     protected function configureListFields(ListMapper $listMapper)
     {
+
+
         $listMapper
             ->add('active', 'boolean', array(
                 'label' => $this->translator->trans("activated?"),
                 'editable' => true
             ))
-            ->add('project_signee', 'boolean', array(
+            ->add('typeSigned', 'boolean', array(
                 'label' => $this->translator->trans("project.signed"),
                 'editable' => false
             ))
             ->add('nameShort', 'text', array(
                 'label' => $this->translator->trans("code")
             ))
+
+
             ->add('name', 'text', array(
                 'label' => $this->translator->trans("name"),
                 'template' => 'ActResourceBundle:Admin:Project/name.html.twig',
-                'editable' => true
+                'editable' => false
             ))
             ->add('start', 'date', array(
                 'label' => $this->translator->trans("date.start")
